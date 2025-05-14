@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketSpot - Login & Signup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e74c3c;
+            --primary-light: #ff8a7a;
+            --secondary-color: #2c3e50;
+            --text-color: #333;
+            --bg-color: #f4f4f4;
+            --card-bg: #fff;
+            --header-bg: #e74c3c;
+            --footer-bg: #e74c3c;
+            --hover-color: #c0392b;
+            --transition-speed: 0.3s;
+            --error-color: #e63946;
+            --success-color: #2a9d8f;
+            --link-color: #4a6fa5;
+            --input-border: #ddd;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #ff6b6b;
+            --primary-light: #ff8e8e;
+            --secondary-color: #ecf0f1;
+            --text-color: #ecf0f1;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --header-bg: #1a1a1a;
+            --footer-bg: #1a1a1a;
+            --hover-color: #ff5252;
+            --error-color: #ff6b6b;
+            --success-color: #52b788;
+            --link-color: #6d9eeb;
+            --input-border: #444;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: #fff;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all var(--transition-speed) ease;
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0;
+        }
+
+        .auth-container {
+            display: flex;
+            gap: 2rem;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .auth-card {
+            flex: 1;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            min-width: 300px;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .auth-card h2 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 1.8rem;
+            position: relative;
+        }
+
+        .auth-card h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            bottom: -8px;
+            left: 25%;
+            background-color: var(--primary-color);
+            transition: width var(--transition-speed) ease;
+        }
+
+        .auth-card h2:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        }
+
+        .valid {
+            border-color: var(--success-color) !important;
+        }
+
+        .invalid {
+            border-color: var(--error-color) !important;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: block;
+            height: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all var(--transition-speed) ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-links {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .auth-links a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .auth-links a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            color: #fff;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-links a {
+            color: #fff;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Password reset specific styles */
+        .reset-instructions {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .success-message {
+            background-color: rgba(42, 157, 143, 0.1);
+            color: var(--success-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message-box {
+            background-color: rgba(230, 57, 70, 0.1);
+            color: var(--error-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        .back-to-login {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--link-color);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .back-to-login:hover {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+            }
+
+            header .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="https://via.placeholder.com/150x50?text=TicketSpot" alt="Logo" class="logo">
+            <nav>
+                <ul>
+                    <li><a href="TS Home.html">Home</a></li>
+                    <li><a href="TS About.html">About</a></li>
+                    <li><a href="TS Contact.html">Contact</a></li>
+                    <li>
+                        <button class="theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <a href="admin.html" id="adminLink" style="display: none;">
+                            <i class="fas fa-user-shield"></i> Admin
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="auth-container">
+            <!-- Login Card -->
+            <div class="auth-card visible" id="loginCard">
+                <h2><i class="fas fa-sign-in-alt"></i> Sign In</h2>
+                <div class="error-message-box" id="loginErrorMessage"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername">Username or Email</label>
+                        <input type="text" id="loginUsername" class="form-control" placeholder="Enter your username or email" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <button type="submit" class="btn">Sign In</button>
+                    <div class="auth-links">
+                        <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                        <p>Don't have an account? <a href="#" id="showSignup">Sign up</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Signup Card -->
+            <div class="auth-card hidden" id="signupCard">
+                <h2><i class="fas fa-user-plus"></i> Sign Up</h2>
+                <div class="error-message-box" id="signupErrorMessage"></div>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupUsername">Username</label>
+                        <input type="text" id="signupUsername" class="form-control" placeholder="Choose a username" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" class="form-control" placeholder="Enter your email" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" class="form-control" placeholder="Create a password" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupConfirmPassword">Confirm Password</label>
+                        <input type="password" id="signupConfirmPassword" class="form-control" placeholder="Confirm your password" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <button type="submit" class="btn">Create Account</button>
+                    <div class="auth-links">
+                        <p>Already have an account? <a href="#" id="showLogin">Sign in</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Forgot Password Card -->
+            <div class="auth-card hidden" id="forgotPasswordCard">
+                <h2><i class="fas fa-key"></i> Reset Password</h2>
+                <p class="reset-instructions">Enter your email address and we'll send you a link to reset your password.</p>
+                <div class="success-message" id="resetSuccessMessage">
+                    Password reset link has been sent to your email!
+                </div>
+                <div class="error-message-box" id="resetErrorMessage"></div>
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="resetEmail">Email</label>
+                        <input type="email" id="resetEmail" class="form-control" placeholder="Enter your email" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <button type="submit" class="btn">Send Reset Link</button>
+                    <a href="#" class="back-to-login" id="backToLogin">Back to Sign In</a>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+            <p>&copy; 2023 TicketSpot. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const themeToggle = document.getElementById('themeToggle');
+            const loginCard = document.getElementById('loginCard');
+            const signupCard = document.getElementById('signupCard');
+            const forgotPasswordCard = document.getElementById('forgotPasswordCard');
+            const showSignup = document.getElementById('showSignup');
+            const showLogin = document.getElementById('showLogin');
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            const backToLogin = document.getElementById('backToLogin');
+            const resetSuccessMessage = document.getElementById('resetSuccessMessage');
+            const adminLink = document.getElementById('adminLink');
+            const loginErrorMessage = document.getElementById('loginErrorMessage');
+            const signupErrorMessage = document.getElementById('signupErrorMessage');
+            const resetErrorMessage = document.getElementById('resetErrorMessage');
+
+            // Theme Toggle
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    document.body.setAttribute('data-theme', 
+                        document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+                    
+                    const icon = themeToggle.querySelector('i');
+                    if (document.body.getAttribute('data-theme') === 'dark') {
+                        icon.classList.remove('fa-moon');
+                        icon.classList.add('fa-sun');
+                    } else {
+                        icon.classList.remove('fa-sun');
+                        icon.classList.add('fa-moon');
+                    }
+                });
+            }
+
+            // Form Navigation
+            if (showSignup) {
+                showSignup.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loginCard.classList.remove('visible');
+                    loginCard.classList.add('hidden');
+                    signupCard.classList.remove('hidden');
+                    signupCard.classList.add('visible');
+                });
+            }
+
+            if (showLogin) {
+                showLogin.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    signupCard.classList.remove('visible');
+                    signupCard.classList.add('hidden');
+                    loginCard.classList.remove('hidden');
+                    loginCard.classList.add('visible');
+                });
+            }
+
+            if (forgotPasswordLink) {
+                forgotPasswordLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loginCard.classList.remove('visible');
+                    loginCard.classList.add('hidden');
+                    forgotPasswordCard.classList.remove('hidden');
+                    forgotPasswordCard.classList.add('visible');
+                });
+            }
+
+            if (backToLogin) {
+                backToLogin.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    forgotPasswordCard.classList.remove('visible');
+                    forgotPasswordCard.classList.add('hidden');
+                    loginCard.classList.remove('hidden');
+                    loginCard.classList.add('visible');
+                    resetSuccessMessage.style.display = 'none';
+                    resetErrorMessage.style.display = 'none';
+                });
+            }
+
+            // Form Validation
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            function validatePassword(password) {
+                return password.length >= 8;
+            }
+
+            // Function to save user data to localStorage
+            function saveUserData(username, email, password) {
+                const user = { username, email, password };
+                
+                // Get existing users or initialize empty array
+                const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+                
+                // Check if user already exists
+                const userExists = existingUsers.some(u => u.email === email || u.username === username);
+                if (userExists) {
+                    return false;
+                }
+                
+                // Add new user
+                existingUsers.push(user);
+                
+                // Save back to localStorage
+                localStorage.setItem('users', JSON.stringify(existingUsers));
+                return true;
+            }
+
+            // Function to verify user credentials
+            function verifyUserCredentials(usernameOrEmail, password) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                
+                // Find user by username or email
+                const user = users.find(u => 
+                    u.username === usernameOrEmail || u.email === usernameOrEmail);
+                
+                if (!user) {
+                    return false;
+                }
+                
+                // Verify password
+                return user.password === password;
+            }
+
+            // Function to save form submissions to localStorage
+            function saveFormData(type, data) {
+                const timestamp = new Date().toISOString();
+                const entry = { type, timestamp, data };
+                
+                // Get existing data or initialize empty array
+                const existingData = JSON.parse(localStorage.getItem('formData') || '[]');
+                
+                // Add new entry
+                existingData.push(entry);
+                
+                // Save back to localStorage
+                localStorage.setItem('formData', JSON.stringify(existingData));
+                
+                // Show admin link
+                adminLink.style.display = 'block';
+            }
+
+            // Login Form
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('loginUsername').value.trim();
+                    const password = document.getElementById('loginPassword').value.trim();
+                    
+                    // Hide any previous error messages
+                    loginErrorMessage.style.display = 'none';
+                    
+                    if (username === '' || password === '') {
+                        loginErrorMessage.textContent = 'Please fill in all fields';
+                        loginErrorMessage.style.display = 'block';
+                        return;
+                    }
+                    
+                    // Verify credentials
+                    if (verifyUserCredentials(username, password)) {
+                        // Save login data
+                        saveFormData('login', {
+                            username,
+                            password
+                        });
+                        
+                        // Show success and redirect (simulated)
+                        // Show success and redirect
+                        alert('Login successful! Redirecting...');
+                        window.location.href = 'TS Home.html';
+                    } else {
+                        loginErrorMessage.textContent = 'Invalid username/email or password';
+                        loginErrorMessage.style.display = 'block';
+                    }
+                });
+            }
+
+            // Signup Form
+            const signupForm = document.getElementById('signupForm');
+            if (signupForm) {
+                signupForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('signupUsername').value.trim();
+                    const email = document.getElementById('signupEmail').value.trim();
+                    const password = document.getElementById('signupPassword').value.trim();
+                    const confirmPassword = document.getElementById('signupConfirmPassword').value.trim();
+                    
+                    // Hide any previous error messages
+                    signupErrorMessage.style.display = 'none';
+                    
+                    if (username === '' || email === '' || password === '' || confirmPassword === '') {
+                        signupErrorMessage.textContent = 'Please fill in all fields';
+                        signupErrorMessage.style.display = 'block';
+                        return;
+                    }
+                    
+                    if (!validateEmail(email)) {
+                        signupErrorMessage.textContent = 'Please enter a valid email address';
+                        signupErrorMessage.style.display = 'block';
+                        return;
+                    }
+                    
+                    if (!validatePassword(password)) {
+                        signupErrorMessage.textContent = 'Password must be at least 8 characters long';
+                        signupErrorMessage.style.display = 'block';
+                        return;
+                    }
+                    
+                    if (password !== confirmPassword) {
+                        signupErrorMessage.textContent = 'Passwords do not match';
+                        signupErrorMessage.style.display = 'block';
+                        return;
+                    }
+                    
+                    // Save user data
+                    if (!saveUserData(username, email, password)) {
+                        signupErrorMessage.textContent = 'Username or email already exists';
+                        signupErrorMessage.style.display = 'block';
+                        return;
+                    }
+                    
+                    // Save signup data
+                    saveFormData('signup', {
+                        username,
+                        email,
+                        password
+                    });
+                    
+                    // Show success and switch to login
+                    alert('Account created successfully! Please sign in.');
+                    signupForm.reset();
+                    signupCard.classList.remove('visible');
+                    signupCard.classList.add('hidden');
+                    loginCard.classList.remove('hidden');
+                    loginCard.classList.add('visible');
+                });
+            }
+
+            // Forgot Password Form
+            const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+            if (forgotPasswordForm) {
+                forgotPasswordForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('resetEmail').value.trim();
+                    
+                    // Hide any previous messages
+                    resetSuccessMessage.style.display = 'none';
+                    resetErrorMessage.style.display = 'none';
+                    
+                    if (!validateEmail(email)) {
+                        resetErrorMessage.textContent = 'Please enter a valid email address';
+                        resetErrorMessage.style.display = 'block';
+                        return;
+                    }
+                    
+                    // Check if email exists
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const userExists = users.some(u => u.email === email);
+                    
+                    if (!userExists) {
+                        resetErrorMessage.textContent = 'No account found with this email';
+                        resetErrorMessage.style.display = 'block';
+                        return;
+                    }
+                    
+                    // Save password reset request
+                    saveFormData('password_reset', {
+                        email
+                    });
+                    
+                    // Show success message
+                    resetSuccessMessage.style.display = 'block';
+                    forgotPasswordForm.reset();
+                    
+                    // Hide the message after 3 seconds
+                    setTimeout(() => {
+                        resetSuccessMessage.style.display = 'none';
+                        forgotPasswordCard.classList.remove('visible');
+                        forgotPasswordCard.classList.add('hidden');
+                        loginCard.classList.remove('hidden');
+                        loginCard.classList.add('visible');
+                    }, 3000);
+                });
+            }
+
+            // Check if there's any admin data to show the link
+            if (localStorage.getItem('formData')) {
+                adminLink.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

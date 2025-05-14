@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coimbatore Restaurant Booking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --dark-color: #292f36;
+            --light-color: #f7fff7;
+            --accent-color: #ffd166;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --bg-color: #f5f5f5;
+            --input-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --modal-bg: rgba(0, 0, 0, 0.8);
+            --feature-bg: #f0f0f0;
+        }
+
+        /* Dark mode variables */
+        .dark-mode {
+            --primary-color: #ff7b7b;
+            --secondary-color: #5ed5cc;
+            --dark-color: #f8f9fa;
+            --light-color: #212529;
+            --accent-color: #ffd97d;
+            --card-bg: #2d3436;
+            --text-color: #f8f9fa;
+            --bg-color: #1a1a1a;
+            --input-bg: #343a40;
+            --border-color: #495057;
+            --modal-bg: rgba(0, 0, 0, 0.9);
+            --feature-bg: #495057;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        /* Loading animation */
+        .loading-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .loader:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            border-top-color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            animation: spin 1.5s linear infinite;
+        }
+
+        .loader:after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            border-top-color: var(--secondary-color);
+            border-bottom-color: var(--secondary-color);
+            animation: spinReverse 1s linear infinite;
+        }
+
+        .loading-text {
+            color: white;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes spinReverse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+
+        /* Hero section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)), 
+                        url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+            color: white;
+            padding: 8rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, var(--bg-color), transparent);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            animation: fadeInUp 1s ease;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.3s forwards;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .search-container {
+            max-width: 1200px;
+            margin: -3rem auto 3rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 1.2rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        .search-container input:focus {
+            outline: none;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .search-container input::placeholder {
+            color: #999;
+        }
+
+        /* Restaurant grid */
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-delay: calc(var(--order) * 0.1s);
+            border: 1px solid var(--border-color);
+        }
+
+        .container:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .container img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .container:hover img {
+            transform: scale(1.05);
+        }
+
+        .restaurant-info {
+            padding: 1.8rem;
+        }
+
+        .new {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+        }
+
+        .restaurant-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .restaurant-location {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .restaurant-location i {
+            margin-right: 5px;
+            font-size: 0.9rem;
+        }
+
+        .restaurant-category {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .restaurant-category i {
+            margin-right: 5px;
+        }
+
+        .booking-button {
+            background: linear-gradient(135deg, var(--primary-color), #ff5252);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .booking-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .booking-button:hover::before {
+            left: 100%;
+        }
+
+        .booking-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+        }
+
+        .booking-button:active {
+            transform: translateY(-1px);
+        }
+
+        .booking-button i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            margin: 0.8rem 0;
+        }
+
+        .stars {
+            color: var(--accent-color);
+            margin-right: 0.5rem;
+            font-size: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .rating-value {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 1rem 0;
+        }
+
+        .feature {
+            background-color: var(--feature-bg);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .feature:hover {
+            transform: translateY(-2px);
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Booking modal */
+        .booking-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .booking-page.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .booking-content {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 700px;
+            padding: 2.5rem;
+            position: relative;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+        }
+
+        .booking-page.active .booking-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #999;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-button:hover {
+            color: var(--primary-color);
+            transform: rotate(90deg);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .booking-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .booking-header p {
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+
+        .booking-form {
+            display: grid;
+            gap: 1.8rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 1rem 1.2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary-color), #ff5252);
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .restaurant-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Payment section */
+        .payment-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-header h3 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .payment-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .payment-method {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: var(--input-bg);
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .payment-method.active {
+            border: 2px solid var(--primary-color);
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+
+        .payment-method i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .payment-method span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .payment-form {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .payment-form.active {
+            display: block;
+        }
+
+        .qr-scanner-container {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--input-bg);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .qr-scanner-container.active {
+            display: block;
+        }
+
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 1rem;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-placeholder::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.8) 50%, transparent 52%);
+            background-size: 20px 20px;
+            animation: qrScan 2s linear infinite;
+        }
+
+        .qr-placeholder i {
+            font-size: 3rem;
+            color: #ccc;
+            z-index: 1;
+        }
+
+        .qr-instructions {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Confirmation modal */
+        .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .confirmation-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .confirmation-content {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+        }
+
+        .confirmation-modal.active .confirmation-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .confirmation-icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            animation: bounce 1s ease;
+        }
+
+        .confirmation-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .confirmation-text {
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .confirmation-details {
+            text-align: left;
+            background-color: var(--input-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .confirmation-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+
+        .confirmation-detail:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .done-btn {
+            background: linear-gradient(135deg, var(--primary-color), #ff5252);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            width: 100%;
+        }
+
+        .done-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+        }
+
+        /* No results */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.3rem;
+            color: var(--text-color);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+
+        @keyframes qrScan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .restaurant-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .booking-content, .confirmation-content {
+                padding: 1.5rem;
+            }
+
+            .confirmation-icon {
+                font-size: 3rem;
+            }
+
+            .confirmation-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .search-container input {
+                padding: 1rem 1.5rem;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-header h2 {
+                font-size: 1.8rem;
+            }
+        }.view-bookings-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            z-index: 100;
+            transition: var(--transition);
+        }
+        
+        .view-bookings-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+        }
+        
+        .view-bookings-btn i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading animation -->
+    <div class="loading-animation">
+        <div class="loader"></div>
+        <div class="loading-text">Loading Coimbatore's Best Restaurants...</div>
+    </div>
+
+    <!-- Theme toggle -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Hero section -->
+    <section class="hero-section">
+        <h1 class="hero-title">Discover Coimbatore's Culinary Delights</h1>
+        <p class="hero-subtitle">Book tables at the finest restaurants in the Manchester of South India</p>
+    </section>
+
+    <!-- Search container -->
+    <div class="search-container">
+        <input type="search" id="searchInput" name="search" placeholder="Search for restaurants, cuisines, or locations in Coimbatore...">
+    </div>
+
+    <!-- Restaurant grid -->
+    <div class="restaurant-grid" id="restaurantGrid">
+        <!-- Restaurant 1 -->
+        <div class="container fade-in" data-name="Annapoorna" data-location="RS Puram" data-category="South Indian" style="--order: 1">
+            <img src="P:\HTML\meditation website\html project\Pictures\res3.jpg" alt="Annapoorna">
+            <div class="restaurant-info">       
+                <span class="new">Popular</span>
+                <p class="restaurant-name">Annapoorna</p>
+                <p class="restaurant-location"><i class="fas fa-map-marker-alt"></i> RS Puram, Coimbatore</p>
+                <p class="restaurant-category"><i class="fas fa-utensils"></i> ₹₹ • South Indian • 2.1 km away</p>
+                <div class="rating">
+                    <div class="stars">★★★★★</div>
+                    <div class="rating-value">4.9 (428 reviews)</div>
+                </div>
+                <div class="features">
+                    <span class="feature">Veg Only</span>
+                    <span class="feature">Traditional</span>
+                    <span class="feature">Famous Ghee Roast</span>
+                </div>
+                <button class="booking-button" onclick="showBooking('Annapoorna')">
+                    <i class="far fa-calendar-alt"></i> Book a Table
+                </button>
+            </div>
+        </div>
+
+        <!-- Restaurant 2 -->
+        <div class="container fade-in" data-name="The French Door" data-location="Race Course" data-category="Continental" style="--order: 2">
+            <img src="P:\HTML\meditation website\html project\Pictures\res4.jpg" alt="The French Door">
+            <div class="restaurant-info">
+                <span class="new">Trending</span>
+                <p class="restaurant-name">The French Door</p>
+                <p class="restaurant-location"><i class="fas fa-map-marker-alt"></i> Race Course, Coimbatore</p>
+                <p class="restaurant-category"><i class="fas fa-utensils"></i> ₹₹₹ • Continental • 1.5 km away</p>
+                <div class="rating">
+                    <div class="stars">★★★★☆</div>
+                    <div class="rating-value">4.7 (195 reviews)</div>
+                </div>
+                <div class="features">
+                    <span class="feature">Fine Dining</span>
+                    <span class="feature">Wine Pairing</span>
+                    <span class="feature">Romantic</span>
+                </div>
+                <button class="booking-button" onclick="showBooking('The French Door')">
+                    <i class="far fa-calendar-alt"></i> Book a Table
+                </button>
+            </div>
+        </div>
+
+        <!-- Restaurant 3 -->
+        <div class="container fade-in" data-name="Sree Krishna Sweets" data-location="Gandhipuram" data-category="Vegetarian" style="--order: 3">
+            <img src="P:\HTML\meditation website\html project\Pictures\res5.jpg" alt="Sree Krishna Sweets">
+            <div class="restaurant-info">
+                <span class="new">Iconic</span>
+                <p class="restaurant-name">Sree Krishna Sweets</p>
+                <p class="restaurant-location"><i class="fas fa-map-marker-alt"></i> Gandhipuram, Coimbatore</p>
+                <p class="restaurant-category"><i class="fas fa-utensils"></i> ₹₹ • Vegetarian • 3.2 km away</p>
+                <div class="rating">
+                    <div class="stars">★★★★★</div>
+                    <div class="rating-value">4.8 (564 reviews)</div>
+                </div>
+                <div class="features">
+                    <span class="feature">Sweets</span>
+                    <span class="feature">Quick Bites</span>
+                    <span class="feature">Famous Kozhukattai</span>
+                </div>
+                <button class="booking-button pulse" onclick="showBooking('Sree Krishna Sweets')">
+                    <i class="far fa-calendar-alt"></i> Book a Table
+                </button>
+            </div>
+        </div>
+
+        <!-- Restaurant 4 -->
+        <div class="container fade-in" data-name="Copper Chimney" data-location="Saibaba Colony" data-category="North Indian" style="--order: 4">
+            <img src="P:\HTML\meditation website\html project\Pictures\res6.jpg" alt="Copper Chimney">
+            <div class="restaurant-info">
+                <span class="new">Popular</span>
+                <p class="restaurant-name">Copper Chimney</p>
+                <p class="restaurant-location"><i class="fas fa-map-marker-alt"></i> Saibaba Colony, Coimbatore</p>
+                <p class="restaurant-category"><i class="fas fa-utensils"></i> ₹₹₹ • North Indian • 4.0 km away</p>
+                <div class="rating">
+                    <div class="stars">★★★★☆</div>
+                    <div class="rating-value">4.5 (342 reviews)</div>
+                </div>
+                <div class="features">
+                    <span class="feature">Tandoori</span>
+                    <span class="feature">Family Dining</span>
+                    <span class="feature">Lunch Buffet</span>
+                </div>
+                <button class="booking-button" onclick="showBooking('Copper Chimney')">
+                    <i class="far fa-calendar-alt"></i> Book a Table
+                </button>
+            </div>
+        </div>
+
+        <!-- Restaurant 5 -->
+        <div class="container fade-in" data-name="Junior Kuppanna" data-location="Avinashi Road" data-category="Chettinad" style="--order: 5">
+            <img src="P:\HTML\meditation website\html project\Pictures\res7.jpg" alt="Junior Kuppanna">
+            <div class="restaurant-info">
+                <span class="new">Featured</span>
+                <p class="restaurant-name">Junior Kuppanna</p>
+                <p class="restaurant-location"><i class="fas fa-map-marker-alt"></i> Avinashi Road, Coimbatore</p>
+                <p class="restaurant-category"><i class="fas fa-utensils"></i> ₹₹ • Chettinad • 5.3 km away</p>
+                <div class="rating">
+                    <div class="stars">★★★★★</div>
+                    <div class="rating-value">4.9 (287 reviews)</div>
+                </div>
+                <div class="features">
+                    <span class="feature">Spicy Food</span>
+                    <span class="feature">Non-Veg</span>
+                    <span class="feature">Authentic</span>
+                </div>
+                <button class="booking-button" onclick="showBooking('Junior Kuppanna')">
+                    <i class="far fa-calendar-alt"></i> Book a Table
+                </button>
+            </div>
+        </div>
+
+        <!-- Restaurant 6 -->
+        <div class="container fade-in" data-name="The Rain Tree" data-location="Race Course" data-category="Multi-cuisine" style="--order: 6">
+            <img src="P:\HTML\meditation website\html project\Pictures\rest.jpg" alt="The Rain Tree">
+            <div class="restaurant-info">
+                <span class="new">Luxury</span>
+                <p class="restaurant-name">The Rain Tree</p>
+                <p class="restaurant-location"><i class="fas fa-map-marker-alt"></i> Race Course, Coimbatore</p>
+                <p class="restaurant-category"><i class="fas fa-utensils"></i> ₹₹₹₹ • Multi-cuisine • 0.8 km away</p>
+                <div class="rating">
+                    <div class="stars">★★★★☆</div>
+                    <div class="rating-value">4.6 (403 reviews)</div>
+                </div>
+                <div class="features">
+                    <span class="feature">5-Star</span>
+                    <span class="feature">Poolside</span>
+                    <span class="feature">Sunday Brunch</span>
+                </div>
+                <button class="booking-button" onclick="showBooking('The Rain Tree')">
+                    <i class="far fa-calendar-alt"></i> Book a Table
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking form (hidden by default) -->
+    <div class="booking-page" id="bookingPage">
+        <div class="booking-content">
+            <button class="close-button" onclick="hideBooking()">×</button>
+            <div class="booking-header">
+                <h2 id="bookingRestaurantName">Restaurant Name</h2>
+                <p>Make a reservation at <span id="restaurantNameSpan"></span></p>
+            </div>
+            <img class="restaurant-image" id="bookingRestaurantImage" src="" alt="">
+            <form class="booking-form" id="bookingForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guests">Number of Guests</label>
+                        <select id="guests" name="guests" required>
+                            <option value="">Select</option>
+                            <option value="1">1 person</option>
+                            <option value="2">2 people</option>
+                            <option value="3">3 people</option>
+                            <option value="4">4 people</option>
+                            <option value="5">5 people</option>
+                            <option value="6">6 people</option>
+                            <option value="7">7 people</option>
+                            <option value="8">8+ people</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Time</label>
+                        <select id="time" name="time" required>
+                            <option value="">Select</option>
+                            <option value="07:00">7:00 AM</option>
+                            <option value="07:30">7:30 AM</option>
+                            <option value="08:00">8:00 AM</option>
+                            <option value="08:30">8:30 AM</option>
+                            <option value="09:00">9:00 AM</option>
+                            <option value="09:30">9:30 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="10:30">10:30 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="11:30">11:30 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="12:30">12:30 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="13:30">1:30 PM</option>
+                            <option value="19:00">7:00 PM</option>
+                            <option value="19:30">7:30 PM</option>
+                            <option value="20:00">8:00 PM</option>
+                            <option value="20:30">8:30 PM</option>
+                            <option value="21:00">9:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="special-requests">Special Requests (optional)</label>
+                    <textarea id="special-requests" name="special-requests" rows="3" placeholder="Dietary restrictions, high chair needed, etc."></textarea>
+                </div>
+                
+                <!-- Payment Section -->
+                <div class="payment-section">
+                    <div class="payment-header">
+                        <h3>Payment</h3>
+                        <div class="payment-amount">₹500.00</div>
+                    </div>
+                    
+                    <div class="payment-methods">
+                        <div class="payment-method" onclick="selectPaymentMethod('card')">
+                            <i class="far fa-credit-card"></i>
+                            <span>Credit Card</span>
+                        </div>
+                        <div class="payment-method" onclick="selectPaymentMethod('upi')">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>UPI</span>
+                        </div>
+                        <div class="payment-method" onclick="selectPaymentMethod('qr')">
+                            <i class="fas fa-qrcode"></i>
+                            <span>QR Code</span>
+                        </div>
+                        <div class="payment-method" onclick="selectPaymentMethod('netbanking')">
+                            <i class="fas fa-university"></i>
+                            <span>Net Banking</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Card Payment Form -->
+                    <div class="payment-form" id="cardPaymentForm">
+                        <div class="form-group">
+                            <label for="card-number">Card Number</label>
+                            <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiry-date">Expiry Date</label>
+                                <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" name="cvv" placeholder="123">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="card-name">Name on Card</label>
+                            <input type="text" id="card-name" name="card-name" placeholder="John Doe">
+                        </div>
+                    </div>
+                    
+                    <!-- UPI Payment Form -->
+                    <div class="payment-form" id="upiPaymentForm">
+                        <div class="form-group">
+                            <label for="upi-id">UPI ID</label>
+                            <input type="text" id="upi-id" name="upi-id" placeholder="yourname@upi">
+                        </div>
+                        <div class="form-group">
+                            <label for="upi-app">Select UPI App</label>
+                            <select id="upi-app" name="upi-app">
+                                <option value="">Select App</option>
+                                <option value="gpay">Google Pay</option>
+                                <option value="paytm">Paytm</option>
+                                <option value="phonepe">PhonePe</option>
+                                <option value="amazonpay">Amazon Pay</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Net Banking Form -->
+                    <div class="payment-form" id="netbankingPaymentForm">
+                        <div class="form-group">
+                            <label for="bank">Select Bank</label>
+                            <select id="bank" name="bank">
+                                <option value="">Select Bank</option>
+                                <option value="sbi">State Bank of India</option>
+                                <option value="icici">ICICI Bank</option>
+                                <option value="hdfc">HDFC Bank</option>
+                                <option value="axis">Axis Bank</option>
+                                <option value="indusind">IndusInd Bank</option>
+                                <option value="kotak">Kotak Mahindra Bank</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- QR Payment Form -->
+                    <div class="qr-scanner-container" id="qrScannerContainer">
+                        <div class="qr-placeholder">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <p class="qr-instructions">Scan the QR code using your preferred payment app to complete the transaction</p>
+                        <button type="button" class="submit-btn" onclick="simulateQRPayment()">
+                            <i class="fas fa-check"></i> I've Completed Payment
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBookingBtn">
+                    <i class="fas fa-lock"></i> Confirm Reservation & Pay
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation modal -->
+    <div class="confirmation-modal" id="confirmationModal">
+        <div class="confirmation-content">
+            <div class="confirmation-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="confirmation-title">Reservation Confirmed!</h2>
+            <p class="confirmation-text">Your table has been successfully booked. A confirmation has been sent to your email.</p>
+            
+            <div class="confirmation-details">
+                <div class="confirmation-detail">
+                    <span class="detail-label">Restaurant:</span>
+                    <span class="detail-value" id="confirmationRestaurant">Annapoorna</span>
+                </div>
+                <div class="confirmation-detail">
+                    <span class="detail-label">Date & Time:</span>
+                    <span class="detail-value" id="confirmationDateTime">June 15, 2023 at 7:00 PM</span>
+                </div>
+                <div class="confirmation-detail">
+                    <span class="detail-label">Guests:</span>
+                    <span class="detail-value" id="confirmationGuests">2 people</span>
+                </div>
+                <div class="confirmation-detail">
+                    <span class="detail-label">Reservation ID:</span>
+                    <span class="detail-value" id="confirmationId">RES-2023-05678</span>
+                </div>
+                <div class="confirmation-detail">
+                    <span class="detail-label">Amount Paid:</span>
+                    <span class="detail-value" id="confirmationAmount">₹500.00</span>
+                </div>
+            </div>
+            
+            <button class="done-btn" onclick="closeConfirmation()">
+                <i class="fas fa-thumbs-up"></i> Awesome!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Hide loading animation when page is loaded
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.querySelector('.loading-animation').style.opacity = '0';
+                setTimeout(function() {
+                    document.querySelector('.loading-animation').style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or use preferred color scheme
+        const savedTheme = localStorage.getItem('theme') || 
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Booking form functions
+        function showBooking(restaurantName) {
+            document.getElementById('bookingRestaurantName').textContent = restaurantName;
+            document.getElementById('restaurantNameSpan').textContent = restaurantName;
+            
+            // Set a different image for each restaurant (for demo purposes)
+            const restaurantImages = [
+                'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
+                'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
+                'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'
+            ];
+            
+            const restaurantIndex = ['Annapoorna', 'The French Door', 'Sree Krishna Sweets', 'Copper Chimney', 'Junior Kuppanna', 'The Rain Tree'].indexOf(restaurantName);
+            document.getElementById('bookingRestaurantImage').src = restaurantImages[restaurantIndex] || restaurantImages[0];
+            
+            document.getElementById('bookingPage').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Reset payment method selection
+            resetPaymentMethods();
+        }
+
+        function hideBooking() {
+            document.getElementById('bookingPage').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close booking form when clicking outside
+        document.getElementById('bookingPage').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideBooking();
+            }
+        });
+
+        // Payment method selection
+        function selectPaymentMethod(method) {
+            // Reset all payment methods
+            resetPaymentMethods();
+            
+            // Highlight selected method
+            const methodElements = document.querySelectorAll('.payment-method');
+            methodElements.forEach(el => {
+                if (el.querySelector('span').textContent.toLowerCase().includes(method)) {
+                    el.classList.add('active');
+                }
+            });
+            
+            // Show corresponding form
+            document.getElementById('cardPaymentForm').style.display = 'none';
+            document.getElementById('upiPaymentForm').style.display = 'none';
+            document.getElementById('netbankingPaymentForm').style.display = 'none';
+            document.getElementById('qrScannerContainer').style.display = 'none';
+            
+            if (method === 'card') {
+                document.getElementById('cardPaymentForm').style.display = 'block';
+            } else if (method === 'upi') {
+                document.getElementById('upiPaymentForm').style.display = 'block';
+            } else if (method === 'netbanking') {
+                document.getElementById('netbankingPaymentForm').style.display = 'block';
+            } else if (method === 'qr') {
+                document.getElementById('qrScannerContainer').style.display = 'block';
+            }
+        }
+        
+        function resetPaymentMethods() {
+            const methodElements = document.querySelectorAll('.payment-method');
+            methodElements.forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('cardPaymentForm').style.display = 'none';
+            document.getElementById('upiPaymentForm').style.display = 'none';
+            document.getElementById('netbankingPaymentForm').style.display = 'none';
+            document.getElementById('qrScannerContainer').style.display = 'none';
+        }
+        
+        // Simulate QR payment
+        function simulateQRPayment() {
+            // In a real app, this would verify the payment
+            setTimeout(() => {
+                submitBookingForm();
+            }, 1000);
+        }
+
+        // Form submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitBookingForm();
+        });
+        
+        function submitBookingForm() {
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const restaurant = document.getElementById('bookingRestaurantName').textContent;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const guests = document.getElementById('guests').value;
+            const specialRequests = document.getElementById('special-requests').value;
+            
+            // Format date for display
+            const dateObj = new Date(date);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = dateObj.toLocaleDateString('en-US', options);
+            
+            // Generate random reservation ID
+            const reservationId = 'RES-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+            
+            // Create booking object
+            const booking = {
+                id: reservationId,
+                name: name,
+                email: email,
+                phone: phone,
+                restaurant: restaurant,
+                date: date,
+                formattedDate: formattedDate,
+                time: time,
+                guests: guests,
+                specialRequests: specialRequests,
+                amount: '500.00',
+                bookingDate: new Date().toISOString()
+            };
+            
+            // Save to localStorage
+            saveBooking(booking);
+            
+            // Update confirmation modal with booking details
+            document.getElementById('confirmationRestaurant').textContent = restaurant;
+            document.getElementById('confirmationDateTime').textContent = `${formattedDate} at ${time}`;
+            document.getElementById('confirmationGuests').textContent = `${guests} ${guests === '1' ? 'person' : 'people'}`;
+            document.getElementById('confirmationId').textContent = reservationId;
+            document.getElementById('confirmationAmount').textContent = '₹500.00';
+            
+            // Hide booking form and show confirmation
+            hideBooking();
+            document.getElementById('confirmationModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Reset form
+            document.getElementById('bookingForm').reset();
+        }
+        
+        // Function to save booking to localStorage
+        function saveBooking(booking) {
+            let bookings = JSON.parse(localStorage.getItem('restaurantBookings')) || [];
+            bookings.push(booking);
+            localStorage.setItem('restaurantBookings', JSON.stringify(bookings));
+        }
+        
+        // Function to view bookings
+        function viewBookings() {
+            // Open bookings page in a new tab
+            window.open('bookings.html', '_blank');
+        }
+        function closeConfirmation() {
+            document.getElementById('confirmationModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Set minimum date to today
+        document.getElementById('date').min = new Date().toISOString().split('T')[0];
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const restaurantContainers = document.querySelectorAll('.container');
+            const restaurantGrid = document.getElementById('restaurantGrid');
+            let hasResults = false;
+
+            // Remove any existing "no results" message
+            const existingNoResults = document.querySelector('.no-results');
+            if (existingNoResults) {
+                existingNoResults.remove();
+            }
+
+            restaurantContainers.forEach(container => {
+                const name = container.dataset.name.toLowerCase();
+                const location = container.dataset.location.toLowerCase();
+                const category = container.dataset.category.toLowerCase();
+                
+                if (name.includes(searchTerm) || 
+                    location.includes(searchTerm) || 
+                    category.includes(searchTerm)) {
+                    container.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    container.style.display = 'none';
+                }
+            });
+
+            // Show "no results" message if no matches found
+            if (!hasResults && searchTerm.length > 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'no-results';
+                noResults.innerHTML = '<i class="fas fa-search"></i><p>No restaurants found matching your search.</p>';
+                restaurantGrid.appendChild(noResults);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    noResults.style.opacity = '1';
+                    noResults.style.transform = 'translateY(0)';
+                }, 10);
+            }
+        });
+    </script>
+     <button class="view-bookings-btn" onclick="viewBookings()">
+        <i class="fas fa-calendar-check"></i> View My Bookings
+    </button>
+</body>
+</html>

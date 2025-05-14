@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMax - Premium Movie Experience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e50914;
+            --secondary-color: #b81d24;
+            --dark-bg: #141414;
+            --light-bg: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #fff;
+            --card-bg: #222;
+            --seat-available: #007bff;
+            --seat-selected: #28a745;
+            --seat-booked: #dc3545;
+            --seat-vip: #ffc107;
+            --seat-vip-selected: #4CAF50;
+            --transition: all 0.3s ease;
+        }
+
+        /* Light mode variables */
+        .light-mode {
+            --dark-bg: #f8f9fa;
+            --light-bg: #141414;
+            --text-dark: #fff;
+            --text-light: #333;
+            --card-bg: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+            border-radius: 5px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 40%;
+        }
+
+        #search-bar {
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 30px;
+            width: 100%;
+            font-size: 1rem;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            color: var(--text-dark);
+            background-color: white;
+        }
+
+        #search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: var(--card-bg);
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+        }
+
+        .search-result-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+        }
+
+        .search-result-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        #theme-toggle-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        #theme-toggle-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Hero Slider */
+        .hero-slider {
+            position: relative;
+            height: 70vh;
+            overflow: hidden;
+        }
+
+        .slider-container {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            color: white;
+        }
+
+        .slide h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .slide p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .slide .btn {
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .slider-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 2;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background-color: var(--primary-color);
+            transform: scale(1.2);
+        }
+
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .slider-arrow:hover {
+            background-color: var(--primary-color);
+        }
+
+        .slider-arrow.left {
+            left: 20px;
+        }
+
+        .slider-arrow.right {
+            right: 20px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Featured Movies */
+        .section-title {
+            text-align: center;
+            margin: 3rem 0 2rem;
+            font-size: 2.2rem;
+            position: relative;
+            color: var(--text-light);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background-color: var(--primary-color);
+            margin: 0.5rem auto 0;
+        }
+
+        .movies-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Movie Grid */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .movie-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .movie-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .movie-card .card-content {
+            padding: 1.2rem;
+            position: relative;
+        }
+
+        .movie-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        .movie-card .meta {
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .movie-card .rating {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .movie-card .btn {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Movie Badge */
+        .movie-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        /* Coming Soon Section */
+        .coming-soon {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 3rem 0;
+            margin: 3rem 0;
+        }
+
+        .coming-soon-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .coming-soon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .coming-soon-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .coming-soon-card:hover {
+            transform: scale(1.05);
+        }
+
+        .coming-soon-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .coming-soon-card .card-content {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .coming-soon-card h4 {
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .coming-soon-card .release-date {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Movie Details */
+        .movie-details {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: none;
+        }
+
+        .movie-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .movie-poster {
+            flex: 0 0 300px;
+            position: relative;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .movie-info {
+            flex: 1;
+        }
+
+        .movie-info h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .movie-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: #aaa;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            color: #ffc107;
+        }
+
+        .synopsis {
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            color: var(--text-light);
+        }
+
+        .showtimes {
+            margin-top: 3rem;
+        }
+
+        .theater {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .theater h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            color: var(--text-light);
+        }
+
+        .time-slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .time-slot {
+            padding: 0.8rem 1.2rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            border: none;
+        }
+
+        .time-slot:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        /* Booking Section */
+        .booking-container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: none;
+        }
+
+        .screen {
+            width: 80%;
+            height: 20px;
+            background: linear-gradient(to bottom, #fff, #ccc);
+            margin: 2rem auto;
+            border-radius: 50% / 100%;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .screen::before {
+            content: 'SCREEN';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .seating-plan {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .seat-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .seat {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            border: none;
+            color: white;
+        }
+
+        .seat.available {
+            background-color: var(--seat-available);
+        }
+
+        .seat.selected {
+            background-color: var(--seat-selected);
+            color: black;
+        }
+
+        .seat.booked {
+            background-color: var(--seat-booked);
+            cursor: not-allowed;
+        }
+
+        .seat.vip {
+            background-color: var(--seat-vip);
+            color: black;
+        }
+
+        .seat.vip.selected {
+            background-color: var(--seat-vip-selected);
+            color: white;
+        }
+
+        .seat:hover:not(.booked) {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .seat-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        .booking-summary {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .booking-summary h3 {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+        }
+
+        .total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            color: var(--text-light);
+        }
+
+        /* Payment Section */
+        .payment-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: none;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .payment-method {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            border: 2px solid transparent;
+            color: var(--text-light);
+        }
+
+        .payment-method:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .payment-method.selected {
+            border-color: var(--primary-color);
+        }
+
+        .payment-method i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .payment-method h3 {
+            margin: 0;
+        }
+
+        .payment-form {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .confirm-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .confirm-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #000;
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo img {
+            height: 40px;
+            border-radius: 5px;
+        }
+
+        .footer-logo h2 {
+            font-size: 1.5rem;
+        }
+
+        .footer-links h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links ul li a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links ul li a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-container {
+                width: 100%;
+            }
+
+            .movie-header {
+                flex-direction: column;
+            }
+
+            .movie-poster {
+                margin: 0 auto;
+                flex: 0 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-slider {
+                height: 60vh;
+            }
+
+            .slide h2 {
+                font-size: 2rem;
+            }
+
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .movie-card img {
+                height: 280px;
+            }
+
+            .time-slots {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            nav ul {
+                gap: 1rem;
+            }
+
+            .hero-slider {
+                height: 50vh;
+            }
+
+            .slide h2 {
+                font-size: 1.8rem;
+            }
+
+            .movie-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .seat {
+                width: 25px;
+                height: 25px;
+                font-size: 0.6rem;
+            }
+
+            .slider-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        } .view-bookings-btn {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .view-bookings-btn:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5);
+    }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="https://via.placeholder.com/50x50" alt="CineMax Logo">
+                <h1>CineMax</h1>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Search for movies..." aria-label="Search movies">
+                <div id="search-results"></div>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="TS Home.html" class="home-link" title="Home">Home</a></li>
+                    <li><a href="TS About.html" class="about-link" title="About">About</a></li>
+                    <li><a href="TS Contact.html" class="contact-link" title="Contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Slider -->
+    <section class="hero-slider">
+        <div class="slider-container" id="slider-container">
+            <div class="slide" style="background-image: url('P:\HTML\meditation website\html project\Pictures\Salaar.jpg')">
+                <div class="slide-content">
+                    <h2>Salaar: Part 1 - Ceasefire</h2>
+                    <p>The film follows the friendship between Deva, the exiled prince of Khansaar, and Varadha, the current prince of Khansaar.</p>
+                    <button class="btn book-btn" data-movie="Salaar: Part 1 - Ceasefire" title="Book tickets for Salaar">Book Now</button>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('P:\HTML\meditation website\html project\Pictures\rrr.jpg')">
+                <div class="slide-content">
+                    <h2>RRR: Rise Roar Revolt</h2>
+                    <p>A period drama set in India during the 1920s, revolving around the inspiring journey of two of India's freedom fighters.</p>
+                    <button class="btn book-btn" data-movie="RRR: Rise Roar Revolt" title="Book tickets for RRR">Book Now</button>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('P:\HTML\meditation website\html project\Pictures\puspha2.jpg')">
+                <div class="slide-content">
+                    <h2>Pushpa 2: The Rule</h2>
+                    <p>Pushpa's meteoric rise as he expands his red sandalwood empire beyond borders.</p>
+                    <button class="btn book-btn" data-movie="Pushpa 2: The Rule" title="Book tickets for Pushpa 2">Book Now</button>
+                </div>
+            </div>
+        </div>
+        
+        <button class="slider-arrow left" id="prev-slide" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
+        <button class="slider-arrow right" id="next-slide" aria-label="Next slide"><i class="fas fa-chevron-right"></i></button>
+        
+        <div class="slider-nav" id="slider-nav">
+            <button class="slider-dot active" aria-label="Slide 1"></button>
+            <button class="slider-dot" aria-label="Slide 2"></button>
+            <button class="slider-dot" aria-label="Slide 3"></button>
+        </div>
+    </section>
+
+    <!-- Movie Grid -->
+    <section class="movies-container">
+        <h2 class="section-title">Now Showing</h2>
+        <div class="movie-grid">
+            <div class="movie-card" data-movie="Hi Nanna">
+                <div class="movie-badge">New Release</div>
+                <img src="P:\HTML\meditation website\html project\Pictures\nanahi.jpg" alt="Hi Nanna movie poster">
+                <div class="card-content">
+                    <h3>Hi Nanna</h3>
+                    <div class="meta">
+                        <span>2023</span>
+                        <span class="rating">8.2 ★</span>
+                    </div>
+                    <p>Romance/Drama ‧ 2h 35m</p>
+                    <button class="btn book-btn" data-movie="Hi Nanna" title="Book tickets for Hi Nanna">Book Now</button>
+                </div>
+            </div>
+            <div class="movie-card" data-movie="Salaar: Part 1 - Ceasefire">
+                <div class="movie-badge">Blockbuster</div>
+                <img src="P:\HTML\meditation website\html project\Pictures\Salaar.jpg" alt="Salaar movie poster">
+                <div class="card-content">
+                    <h3>Salaar: Part 1 - Ceasefire</h3>
+                    <div class="meta">
+                        <span>2024</span>
+                        <span class="rating">8.5 ★</span>
+                    </div>
+                    <p>Action/Thriller ‧ 2h 55m</p>
+                    <button class="btn book-btn" data-movie="Salaar: Part 1 - Ceasefire" title="Book tickets for Salaar">Book Now</button>
+                </div>
+            </div>
+            <div class="movie-card" data-movie="Sita Ramam">
+                <div class="movie-badge">Fan Favorite</div>
+                <img src="P:\HTML\meditation website\html project\Pictures\sitaraman.jpg" alt="Sita Ramam movie poster">
+                <div class="card-content">
+                    <h3>Sita Ramam</h3>
+                    <div class="meta">
+                        <span>2022</span>
+                        <span class="rating">8.8 ★</span>
+                    </div>
+                    <p>Romance/Action ‧ 2h 43m</p>
+                    <button class="btn book-btn" data-movie="Sita Ramam" title="Book tickets for Sita Ramam">Book Now</button>
+                </div>
+            </div>
+            <div class="movie-card" data-movie="RRR: Rise Roar Revolt">
+                <div class="movie-badge">Award Winner</div>
+                <img src="P:\HTML\meditation website\html project\Pictures\rrr.jpg" alt="RRR movie poster">
+                <div class="card-content">
+                    <h3>RRR: Rise Roar Revolt</h3>
+                    <div class="meta">
+                        <span>2022</span>
+                        <span class="rating">9.0 ★</span>
+                    </div>
+                    <p>Action/Adventure ‧ 3h 2m</p>
+                    <button class="btn book-btn" data-movie="RRR: Rise Roar Revolt" title="Book tickets for RRR">Book Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coming Soon Section -->
+    <section class="coming-soon">
+        <div class="coming-soon-container">
+            <h2 class="section-title">Coming Soon</h2>
+            <div class="coming-soon-grid">
+                <div class="coming-soon-card">
+                    <img src="P:\HTML\meditation website\html project\Pictures\puspha2.jpg" alt="Pushpa 2 movie poster">
+                    <div class="card-content">
+                        <h4>Pushpa 2: The Rule</h4>
+                        <p class="release-date">Dec 15, 2024</p>
+                    </div>
+                </div>
+                <div class="coming-soon-card">
+                    <img src="P:\HTML\meditation website\html project\Pictures\og.jpg" alt="OG movie poster">
+                    <div class="card-content">
+                        <h4>OG: Original Gangster</h4>
+                        <p class="release-date">Jan 12, 2025</p>
+                    </div>
+                </div>
+                <div class="coming-soon-card">
+                    <img src="P:\HTML\meditation website\html project\Pictures\sifc img.jpg" alt="Kalki 2898 AD movie poster">
+                    <div class="card-content">
+                        <h4>Kalki 2898 AD</h4>
+                        <p class="release-date">May 9, 2025</p>
+                    </div>
+                </div>
+                <div class="coming-soon-card">
+                    <img src="P:\HTML\meditation website\html project\Pictures\dev.webp" alt="Devara movie poster">
+                    <div class="card-content">
+                        <h4>Devara: Part 1</h4>
+                        <p class="release-date">Apr 5, 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Movie Details -->
+    <section class="movie-details" id="movie-details">
+        <div class="movie-header">
+            <div class="movie-poster">
+                <img id="detail-poster" src="P:\HTML\meditation website\html project\Pictures\Salaar.jpg" alt="Movie Poster">
+            </div>
+            <div class="movie-info">
+                <h1 id="detail-title">Movie Title</h1>
+                <div class="movie-meta">
+                    <span id="detail-year">2023</span>
+                    <span id="detail-runtime">2h 30m</span>
+                    <span id="detail-genre">Action, Drama</span>
+                </div>
+                <div class="rating">
+                    <div class="stars">★★★★★</div>
+                    <span id="detail-rating">8.5/10</span>
+                </div>
+                <div class="synopsis">
+                    <p id="detail-synopsis">Movie synopsis goes here. This is a brief description of what the movie is about.</p>
+                </div>
+                <div class="buttons">
+                    <button class="btn back-btn" title="Go back to movies">Back to Movies</button>
+                    <button class="btn book-now-btn" title="Book tickets now">Book Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="showtimes">
+            <h3>Showtimes</h3>
+            <div class="theater">
+                <h3>CineMax Palladam</h3>
+                <div class="time-slots">
+                    <button class="time-slot" data-time="11:10 AM" title="11:10 AM showtime">11:10 AM (4K Dolby)</button>
+                    <button class="time-slot" data-time="02:45 PM" title="2:45 PM showtime">02:45 PM (4K Dolby)</button>
+                    <button class="time-slot" data-time="05:50 PM" title="5:50 PM showtime">05:50 PM (4K Dolby)</button>
+                </div>
+            </div>
+            <div class="theater">
+                <h3>CineMax Coimbatore</h3>
+                <div class="time-slots">
+                    <button class="time-slot" data-time="12:20 PM" title="12:20 PM showtime">12:20 PM (Dolby 7.1)</button>
+                    <button class="time-slot" data-time="07:05 PM" title="7:05 PM showtime">07:05 PM (Dolby 7.1)</button>
+                </div>
+            </div>
+            <div class="theater">
+                <h3>CineMax Annur</h3>
+                <div class="time-slots">
+                    <button class="time-slot" data-time="11:30 AM" title="11:30 AM showtime">11:30 AM (Atmos)</button>
+                    <button class="time-slot" data-time="06:25 PM" title="6:25 PM showtime">06:25 PM (Atmos)</button>
+                    <button class="time-slot" data-time="10:05 PM" title="10:05 PM showtime">10:05 PM (Atmos)</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section class="booking-container" id="booking-container">
+        <h2 class="section-title">Select Your Seats</h2>
+        <div class="screen"></div>
+        
+        <div class="seat-legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: var(--seat-available);"></div>
+                <span>Available</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: var(--seat-selected);"></div>
+                <span>Selected</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: var(--seat-booked);"></div>
+                <span>Booked</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: var(--seat-vip);"></div>
+                <span>VIP</span>
+            </div>
+        </div>
+        
+        <div class="seating-plan">
+            <!-- Rows A-F (Premium) -->
+            <div class="seat-row">
+                <button class="seat available" data-seat="A1" title="Seat A1">A1</button>
+                <button class="seat available" data-seat="A2" title="Seat A2">A2</button>
+                <button class="seat available" data-seat="A3" title="Seat A3">A3</button>
+                <button class="seat available" data-seat="A4" title="Seat A4">A4</button>
+                <button class="seat available" data-seat="A5" title="Seat A5">A5</button>
+                <button class="seat available" data-seat="A6" title="Seat A6">A6</button>
+                <button class="seat available" data-seat="A7" title="Seat A7">A7</button>
+                <button class="seat available" data-seat="A8" title="Seat A8">A8</button>
+                <button class="seat available" data-seat="A9" title="Seat A9">A9</button>
+                <button class="seat available" data-seat="A10" title="Seat A10">A10</button>
+            </div>
+            <div class="seat-row">
+                <button class="seat available" data-seat="B1" title="Seat B1">B1</button>
+                <button class="seat available" data-seat="B2" title="Seat B2">B2</button>
+                <button class="seat available" data-seat="B3" title="Seat B3">B3</button>
+                <button class="seat available" data-seat="B4" title="Seat B4">B4</button>
+                <button class="seat available" data-seat="B5" title="Seat B5">B5</button>
+                <button class="seat available" data-seat="B6" title="Seat B6">B6</button>
+                <button class="seat available" data-seat="B7" title="Seat B7">B7</button>
+                <button class="seat available" data-seat="B8" title="Seat B8">B8</button>
+                <button class="seat available" data-seat="B9" title="Seat B9">B9</button>
+                <button class="seat available" data-seat="B10" title="Seat B10">B10</button>
+            </div>
+            <div class="seat-row">
+                <button class="seat available" data-seat="C1" title="Seat C1">C1</button>
+                <button class="seat available" data-seat="C2" title="Seat C2">C2</button>
+                <button class="seat available" data-seat="C3" title="Seat C3">C3</button>
+                <button class="seat available" data-seat="C4" title="Seat C4">C4</button>
+                <button class="seat available" data-seat="C5" title="Seat C5">C5</button>
+                <button class="seat available" data-seat="C6" title="Seat C6">C6</button>
+                <button class="seat available" data-seat="C7" title="Seat C7">C7</button>
+                <button class="seat available" data-seat="C8" title="Seat C8">C8</button>
+                <button class="seat available" data-seat="C9" title="Seat C9">C9</button>
+                <button class="seat available" data-seat="C10" title="Seat C10">C10</button>
+            </div>
+            <div class="seat-row">
+                <button class="seat available" data-seat="D1" title="Seat D1">D1</button>
+                <button class="seat available" data-seat="D2" title="Seat D2">D2</button>
+                <button class="seat available" data-seat="D3" title="Seat D3">D3</button>
+                <button class="seat available" data-seat="D4" title="Seat D4">D4</button>
+                <button class="seat available" data-seat="D5" title="Seat D5">D5</button>
+                <button class="seat available" data-seat="D6" title="Seat D6">D6</button>
+                <button class="seat available" data-seat="D7" title="Seat D7">D7</button>
+                <button class="seat available" data-seat="D8" title="Seat D8">D8</button>
+                <button class="seat available" data-seat="D9" title="Seat D9">D9</button>
+                <button class="seat available" data-seat="D10" title="Seat D10">D10</button>
+            </div>
+            <div class="seat-row">
+                <button class="seat available" data-seat="E1" title="Seat E1">E1</button>
+                <button class="seat available" data-seat="E2" title="Seat E2">E2</button>
+                <button class="seat available" data-seat="E3" title="Seat E3">E3</button>
+                <button class="seat available" data-seat="E4" title="Seat E4">E4</button>
+                <button class="seat available" data-seat="E5" title="Seat E5">E5</button>
+                <button class="seat available" data-seat="E6" title="Seat E6">E6</button>
+                <button class="seat available" data-seat="E7" title="Seat E7">E7</button>
+                <button class="seat available" data-seat="E8" title="Seat E8">E8</button>
+                <button class="seat available" data-seat="E9" title="Seat E9">E9</button>
+                <button class="seat available" data-seat="E10" title="Seat E10">E10</button>
+            </div>
+            <div class="seat-row">
+                <button class="seat vip available" data-seat="F1" title="VIP Seat F1">F1</button>
+                <button class="seat vip available" data-seat="F2" title="VIP Seat F2">F2</button>
+                <button class="seat vip available" data-seat="F3" title="VIP Seat F3">F3</button>
+                <button class="seat vip available" data-seat="F4" title="VIP Seat F4">F4</button>
+                <button class="seat vip available" data-seat="F5" title="VIP Seat F5">F5</button>
+                <button class="seat vip available" data-seat="F6" title="VIP Seat F6">F6</button>
+                <button class="seat vip available" data-seat="F7" title="VIP Seat F7">F7</button>
+                <button class="seat vip available" data-seat="F8" title="VIP Seat F8">F8</button>
+                <button class="seat vip available" data-seat="F9" title="VIP Seat F9">F9</button>
+                <button class="seat vip available" data-seat="F10" title="VIP Seat F10">F10</button>
+            </div>
+            
+            <!-- Rows G-M (Standard) -->
+            <div class="seat-row">
+                <button class="seat available" data-seat="G1" title="Seat G1">G1</button>
+                <button class="seat available" data-seat="G2" title="Seat G2">G2</button>
+                <button class="seat available" data-seat="G3" title="Seat G3">G3</button>
+                <button class="seat available" data-seat="G4" title="Seat G4">G4</button>
+                <button class="seat available" data-seat="G5" title="Seat G5">G5</button>
+                <button class="seat available" data-seat="G6" title="Seat G6">G6</button>
+                <button class="seat available" data-seat="G7" title="Seat G7">G7</button>
+                <button class="seat available" data-seat="G8" title="Seat G8">G8</button>
+                <button class="seat available" data-seat="G9" title="Seat G9">G9</button>
+                <button class="seat available" data-seat="G10" title="Seat G10">G10</button>
+            </div>
+            <div class="seat-row">
+                <button class="seat available" data-seat="H1" title="Seat H1">H1</button>
+                <button class="seat available" data-seat="H2" title="Seat H2">H2</button>
+                <button class="seat available" data-seat="H3" title="Seat H3">H3</button>
+                <button class="seat available" data-seat="H4" title="Seat H4">H4</button>
+                <button class="seat available" data-seat="H5" title="Seat H5">H5</button>
+                <button class="seat available" data-seat="H6" title="Seat H6">H6</button>
+                <button class="seat available" data-seat="H7" title="Seat H7">H7</button>
+                <button class="seat available" data-seat="H8" title="Seat H8">H8</button>
+                <button class="seat available" data-seat="H9" title="Seat H9">H9</button>
+                <button class="seat available" data-seat="H10" title="Seat H10">H10</button>
+            </div>
+            <div class="seat-row">
+                <button class="seat available" data-seat="I1" title="Seat I1">I1</button>
+                <button class="seat available" data-seat="I2" title="Seat I2">I2</button>
+                <button class="seat available" data-seat="I3" title="Seat I3">I3</button>
+                <button class="seat available" data-seat="I4" title="Seat I4">I4</button>
+                <button class="seat available" data-seat="I5" title="Seat I5">I5</button>
+                <button class="seat available" data-seat="I6" title="Seat I6">I6</button>
+                <button class="seat available" data-seat="I7" title="Seat I7">I7</button>
+                <button class="seat available" data-seat="I8" title="Seat I8">I8</button>
+                <button class="seat available" data-seat="I9" title="Seat I9">I9</button>
+                <button class="seat available" data-seat="I10" title="Seat I10">I10</button>
+            </div>
+            <div class="seat-row">
+                <button class="seat available" data-seat="J1" title="Seat J1">J1</button>
+                <button class="seat available" data-seat="J2" title="Seat J2">J2</button>
+                <button class="seat available" data-seat="J3" title="Seat J3">J3</button>
+                <button class="seat available" data-seat="J4" title="Seat J4">J4</button>
+                <button class="seat available" data-seat="J5" title="Seat J5">J5</button>
+                <button class="seat available" data-seat="J6" title="Seat J6">J6</button>
+                <button class="seat available" data-seat="J7" title="Seat J7">J7</button>
+                <button class="seat available" data-seat="J8" title="Seat J8">J8</button>
+                <button class="seat available" data-seat="J9" title="Seat J9">J9</button>
+                <button class="seat available" data-seat="J10" title="Seat J10">J10</button>
+            </div>
+            <div class="seat-row">
+                <button class="seat available" data-seat="K1" title="Seat K1">K1</button>
+                <button class="seat available" data-seat="K2" title="Seat K2">K2</button>
+                <button class="seat available" data-seat="K3" title="Seat K3">K3</button>
+                <button class="seat available" data-seat="K4" title="Seat K4">K4</button>
+                <button class="seat available" data-seat="K5" title="Seat K5">K5</button>
+                <button class="seat available" data-seat="K6" title="Seat K6">K6</button>
+                <button class="seat available" data-seat="K7" title="Seat K7">K7</button>
+                <button class="seat available" data-seat="K8" title="Seat K8">K8</button>
+                <button class="seat available" data-seat="K9" title="Seat K9">K9</button>
+                <button class="seat available" data-seat="K10" title="Seat K10">K10</button>
+            </div>
+            <div class="seat-row">
+                <button class="seat available" data-seat="L1" title="Seat L1">L1</button>
+                <button class="seat available" data-seat="L2" title="Seat L2">L2</button>
+                <button class="seat available" data-seat="L3" title="Seat L3">L3</button>
+                <button class="seat available" data-seat="L4" title="Seat L4">L4</button>
+                <button class="seat available" data-seat="L5" title="Seat L5">L5</button>
+                <button class="seat available" data-seat="L6" title="Seat L6">L6</button>
+                <button class="seat available" data-seat="L7" title="Seat L7">L7</button>
+                <button class="seat available" data-seat="L8" title="Seat L8">L8</button>
+                <button class="seat available" data-seat="L9" title="Seat L9">L9</button>
+                <button class="seat available" data-seat="L10" title="Seat L10">L10</button>
+            </div>
+            <div class="seat-row">
+                <button class="seat available" data-seat="M1" title="Seat M1">M1</button>
+                <button class="seat available" data-seat="M2" title="Seat M2">M2</button>
+                <button class="seat available" data-seat="M3" title="Seat M3">M3</button>
+                <button class="seat available" data-seat="M4" title="Seat M4">M4</button>
+                <button class="seat available" data-seat="M5" title="Seat M5">M5</button>
+                <button class="seat available" data-seat="M6" title="Seat M6">M6</button>
+                <button class="seat available" data-seat="M7" title="Seat M7">M7</button>
+                <button class="seat available" data-seat="M8" title="Seat M8">M8</button>
+                <button class="seat available" data-seat="M9" title="Seat M9">M9</button>
+                <button class="seat available" data-seat="M10" title="Seat M10">M10</button>
+            </div>
+        </div>
+        
+        <div class="booking-summary">
+            <h3>Booking Summary</h3>
+            <div class="summary-item">
+                <span>Movie:</span>
+                <span id="summary-movie">-</span>
+            </div>
+            <div class="summary-item">
+                <span>Theater:</span>
+                <span id="summary-theater">-</span>
+            </div>
+            <div class="summary-item">
+                <span>Showtime:</span>
+                <span id="summary-time">-</span>
+            </div>
+            <div class="summary-item">
+                <span>Seats:</span>
+                <span id="summary-seats">-</span>
+            </div>
+            <div class="summary-item">
+                <span>Subtotal:</span>
+                <span id="summary-subtotal">₹0</span>
+            </div>
+            <div class="summary-item">
+                <span>Tax (18%):</span>
+                <span id="summary-tax">₹0</span>
+            </div>
+            <div class="summary-item total">
+                <span>Total:</span>
+                <span id="summary-total">₹0</span>
+            </div>
+            <button class="btn confirm-btn" id="proceed-to-payment" title="Proceed to payment">Proceed to Payment</button>
+        </div>
+    </section>
+
+    <!-- Payment Section -->
+    <section class="payment-container" id="payment-container">
+        <h2 class="section-title">Payment Method</h2>
+        
+        <div class="payment-methods">
+            <button class="payment-method" data-method="credit" title="Credit card payment">
+                <i class="fas fa-credit-card"></i>
+                <h3>Credit Card</h3>
+            </button>
+            <button class="payment-method" data-method="debit" title="Debit card payment">
+                <i class="fas fa-credit-card"></i>
+                <h3>Debit Card</h3>
+            </button>
+            <button class="payment-method" data-method="netbanking" title="Net banking payment">
+                <i class="fas fa-university"></i>
+                <h3>Net Banking</h3>
+            </button>
+            <button class="payment-method" data-method="upi" title="UPI payment">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>UPI</h3>
+            </button>
+        </div>
+        
+        <div class="payment-form" id="credit-form">
+            <div class="form-group">
+                <label for="card-number">Card Number</label>
+                <input type="text" id="card-number" placeholder="1234 5678 9012 3456" aria-label="Card number">
+            </div>
+            <div class="form-group">
+                <label for="card-name">Cardholder Name</label>
+                <input type="text" id="card-name" placeholder="John Doe" aria-label="Cardholder name">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="expiry-date">Expiry Date</label>
+                    <input type="text" id="expiry-date" placeholder="MM/YY" aria-label="Expiry date">
+                </div>
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input type="text" id="cvv" placeholder="123" aria-label="CVV">
+                </div>
+            </div>
+            <button class="confirm-btn" id="confirm-payment" title="Confirm payment">Confirm Payment</button>
+        </div>
+        
+        <div class="payment-form" id="debit-form">
+            <div class="form-group">
+                <label for="debit-card-number">Card Number</label>
+                <input type="text" id="debit-card-number" placeholder="1234 5678 9012 3456" aria-label="Debit card number">
+            </div>
+            <div class="form-group">
+                <label for="debit-card-name">Cardholder Name</label>
+                <input type="text" id="debit-card-name" placeholder="John Doe" aria-label="Debit cardholder name">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="debit-expiry-date">Expiry Date</label>
+                    <input type="text" id="debit-expiry-date" placeholder="MM/YY" aria-label="Debit card expiry date">
+                </div>
+                <div class="form-group">
+                    <label for="debit-cvv">CVV</label>
+                    <input type="text" id="debit-cvv" placeholder="123" aria-label="Debit card CVV">
+                </div>
+            </div>
+            <button class="confirm-btn" id="confirm-debit-payment" title="Confirm debit payment">Confirm Payment</button>
+        </div>
+        
+        <div class="payment-form" id="netbanking-form">
+            <div class="form-group">
+                <label for="bank">Select Bank</label>
+                <select id="bank" class="form-control" aria-label="Select bank">
+                    <option value="">-- Select Bank --</option>
+                    <option value="sbi">State Bank of India</option>
+                    <option value="hdfc">HDFC Bank</option>
+                    <option value="icici">ICICI Bank</option>
+                    <option value="axis">Axis Bank</option>
+                    <option value="pnb">Punjab National Bank</option>
+                </select>
+            </div>
+            <button class="confirm-btn" id="confirm-netbanking-payment" title="Proceed to net banking">Proceed to Bank</button>
+        </div>
+        
+        <div class="payment-form" id="upi-form">
+            <div class="form-group">
+                <label for="upi-id">UPI ID</label>
+                <input type="text" id="upi-id" placeholder="name@upi" aria-label="UPI ID">
+            </div>
+            <button class="confirm-btn" id="confirm-upi-payment" title="Pay via UPI">Pay via UPI</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <div class="footer-logo">
+                    <img src="https://via.placeholder.com/40x40" alt="CineMax Logo">
+                    <h2>CineMax</h2>
+                </div>
+                <p>Experience the magic of movies in our state-of-the-art theaters with premium sound and picture quality.</p>
+                <div class="social-links">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#" class="home-link" title="Home">Home</a></li>
+                    <li><a href="#" class="movies-link" title="Movies">Movies</a></li>
+                    <li><a href="#" title="Theaters">Theaters</a></li>
+                    <li><a href="#" title="Offers">Offers</a></li>
+                    <li><a href="#" title="Gift Cards">Gift Cards</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3>Information</h3>
+                <ul>
+                    <li><a href="#" title="About Us">About Us</a></li>
+                    <li><a href="#" title="Contact Us">Contact Us</a></li>
+                    <li><a href="#" title="Terms & Conditions">Terms & Conditions</a></li>
+                    <li><a href="#" title="Privacy Policy">Privacy Policy</a></li>
+                    <li><a href="#" title="FAQ">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3>Contact</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Cinema Street, Coimbatore</li>
+                    <li><i class="fas fa-phone"></i> +91 9876543210</li>
+                    <li><i class="fas fa-envelope"></i> info@cinemax.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 CineMax. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Button -->
+    <div class="theme-toggle">
+        <button id="theme-toggle-btn" title="Toggle dark/light mode"><i class="fas fa-moon"></i></button>
+    </div>
+    <button class="view-bookings-btn" onclick="viewBookings()">
+        <i class="fas fa-ticket-alt"></i> View My Bookings
+    </button>
+    <script>
+        // Movie data
+        const movies = [
+            {
+                title: "Hi Nanna",
+                year: "2023",
+                runtime: "2h 35m",
+                genre: "Romance, Drama",
+                rating: "8.2",
+                synopsis: "A doting father and his six-year-old's lives alter when a woman befriends them and empathizes with their past.",
+                image: "",
+                nowShowing: true
+            },
+            {
+                title: "Salaar: Part 1 - Ceasefire",
+                year: "2024",
+                runtime: "2h 55m",
+                genre: "Action, Thriller",
+                rating: "8.5",
+                synopsis: "The film follows the friendship between Deva, the exiled prince of Khansaar, and Varadha, the current prince of Khansaar.",
+                image: "https://source.unsplash.com/random/300x450/?action,movie",
+                nowShowing: true
+            },
+            {
+                title: "Sita Ramam",
+                year: "2022",
+                runtime: "2h 43m",
+                genre: "Romance, Action",
+                rating: "8.8",
+                synopsis: "A long-lost letter must find its way to the recipient twenty years later. A rabble-rouser learns a lesson in humility and love along the way.",
+                image: "https://source.unsplash.com/random/300x450/?romance,drama",
+                nowShowing: true
+            },
+            {
+                title: "RRR: Rise Roar Revolt",
+                year: "2022",
+                runtime: "3h 2m",
+                genre: "Action, Adventure",
+                rating: "9.0",
+                synopsis: "RRR is a period drama set in India during the 1920s, revolving around the inspiring journey of two of India's freedom fighters - Alluri Sitarama Raju and Komaram Bheem.",
+                image: "https://source.unsplash.com/random/300x450/?action,epic",
+                nowShowing: true
+            },
+            {
+                title: "Pushpa 2: The Rule",
+                year: "2024",
+                runtime: "3h 21m",
+                genre: "Action, Thriller",
+                rating: "8.7",
+                synopsis: "Pushpa 2: The Rule picks up from the explosive events of the first part, following Pushpa's meteoric rise as he expands his red sandalwood empire beyond borders.",
+                image: "https://source.unsplash.com/random/300x450/?upcoming,movie",
+                nowShowing: false
+            },
+            {
+                title: "OG: Original Gangster",
+                year: "2025",
+                runtime: "2h 55m",
+                genre: "Action, Thriller",
+                rating: "8.9",
+                synopsis: "About 10 years ago, a devastating storm hit Mumbai that cleansed the soil and trees and swept half the city. However, the blood bath he unleashed has not been wiped by any storm to date. Now, if that guy is coming back to Mumbai, even Satan should be scared! They call him OG!",
+                image: "https://source.unsplash.com/random/300x450/?gangster,movie",
+                nowShowing: false
+            },
+            {
+                title: "Kalki 2898 AD",
+                year: "2025",
+                runtime: "2h 45m",
+                genre: "Sci-Fi, Action",
+                rating: "8.6",
+                synopsis: "A futuristic sci-fi thriller set in the year 2898 AD, exploring the boundaries of human civilization and technology.",
+                image: "https://source.unsplash.com/random/300x450/?sci-fi,movie",
+                nowShowing: false
+            },
+            {
+                title: "Devara: Part 1",
+                year: "2024",
+                runtime: "2h 50m",
+                genre: "Action, Drama",
+                rating: "8.4",
+                synopsis: "A high-octane action drama set in the backdrop of a coastal town, following the journey of a fearless man who stands against injustice.",
+                image: "https://source.unsplash.com/random/300x450/?action,thriller",
+                nowShowing: false
+            }
+        ];
+
+        // Booked seats data (would normally come from a database)
+        let bookedSeats = {
+            "Salaar: Part 1 - Ceasefire": {
+                "CineMax Palladam": {
+                    "11:10 AM": ["A3", "B5", "C7"],
+                    "02:45 PM": ["D2", "E4", "F6"],
+                    "05:50 PM": []
+                },
+                "CineMax Coimbatore": {
+                    "12:20 PM": ["G1", "H3", "I5"],
+                    "07:05 PM": ["J2", "K4", "L6"]
+                },
+                "CineMax Annur": {
+                    "11:30 AM": ["M1", "M2", "M3"],
+                    "06:25 PM": ["A1", "A2", "A3"],
+                    "10:05 PM": ["B1", "B2", "B3"]
+                }
+            },
+            "Hi Nanna": {
+                "CineMax Palladam": {
+                    "11:10 AM": ["C4", "D5", "E6"],
+                    "02:45 PM": ["F7", "G8", "H9"],
+                    "05:50 PM": ["I10", "J1", "K2"]
+                }
+            }
+        };
+
+        // Current booking information
+        let currentBooking = {
+            movie: "",
+            theater: "",
+            time: "",
+            seats: [],
+            paymentMethod: ""
+        };
+
+        // DOM Elements
+        const searchBar = document.getElementById('search-bar');
+        const searchResults = document.getElementById('search-results');
+        const movieDetails = document.getElementById('movie-details');
+        const bookingContainer = document.getElementById('booking-container');
+        const paymentContainer = document.getElementById('payment-container');
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const bookBtns = document.querySelectorAll('.book-btn');
+        const backBtn = document.querySelector('.back-btn');
+        const bookNowBtn = document.querySelector('.book-now-btn');
+        const homeLinks = document.querySelectorAll('.home-link');
+        const moviesLinks = document.querySelectorAll('.movies-link');
+        const timeSlots = document.querySelectorAll('.time-slot');
+        const seats = document.querySelectorAll('.seat');
+        const proceedToPaymentBtn = document.getElementById('proceed-to-payment');
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const confirmPaymentBtn = document.getElementById('confirm-payment');
+        const confirmDebitPaymentBtn = document.getElementById('confirm-debit-payment');
+        const confirmNetbankingPaymentBtn = document.getElementById('confirm-netbanking-payment');
+        const confirmUpiPaymentBtn = document.getElementById('confirm-upi-payment');
+
+        // Slider elements
+        const sliderContainer = document.getElementById('slider-container');
+        const slides = document.querySelectorAll('.slide');
+        const prevSlideBtn = document.getElementById('prev-slide');
+        const nextSlideBtn = document.getElementById('next-slide');
+        const sliderDots = document.querySelectorAll('.slider-dot');
+
+        // Summary elements
+        const summaryMovie = document.getElementById('summary-movie');
+        const summaryTheater = document.getElementById('summary-theater');
+        const summaryTime = document.getElementById('summary-time');
+        const summarySeats = document.getElementById('summary-seats');
+        const summarySubtotal = document.getElementById('summary-subtotal');
+        const summaryTax = document.getElementById('summary-tax');
+        const summaryTotal = document.getElementById('summary-total');
+
+        // Detail elements
+        const detailTitle = document.getElementById('detail-title');
+        const detailYear = document.getElementById('detail-year');
+        const detailRuntime = document.getElementById('detail-runtime');
+        const detailGenre = document.getElementById('detail-genre');
+        const detailRating = document.getElementById('detail-rating');
+        const detailSynopsis = document.getElementById('detail-synopsis');
+        const detailPoster = document.getElementById('detail-poster');
+
+        // Initialize the page
+        function initPage() {
+            showAllMovies();
+            updateSlider();
+            
+            // Set up event listeners
+            setupEventListeners();
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Slider navigation
+            nextSlideBtn.addEventListener('click', handleNextSlide);
+            prevSlideBtn.addEventListener('click', handlePrevSlide);
+            
+            // Dot navigation
+            sliderDots.forEach((dot, index) => {
+                dot.addEventListener('click', () => handleDotClick(index));
+            });
+            
+            // Search functionality
+            searchBar.addEventListener('input', handleSearch);
+            document.addEventListener('click', handleSearchOutsideClick);
+            
+            // Movie booking
+            bookBtns.forEach(btn => btn.addEventListener('click', handleBookBtnClick));
+            bookNowBtn.addEventListener('click', handleBookNowClick);
+            backBtn.addEventListener('click', handleBackBtnClick);
+            
+            // Navigation links
+            homeLinks.forEach(link => link.addEventListener('click', handleHomeLinkClick));
+            moviesLinks.forEach(link => link.addEventListener('click', handleMoviesLinkClick));
+            
+            // Time slots
+            timeSlots.forEach(slot => slot.addEventListener('click', handleTimeSlotClick));
+            
+            // Seat selection
+            seats.forEach(seat => seat.addEventListener('click', handleSeatClick));
+            
+            // Payment process
+            proceedToPaymentBtn.addEventListener('click', handleProceedToPayment);
+            paymentMethods.forEach(method => method.addEventListener('click', handlePaymentMethodClick));
+            
+            // Payment confirmation
+            confirmPaymentBtn.addEventListener('click', confirmPayment);
+            confirmDebitPaymentBtn.addEventListener('click', confirmPayment);
+            confirmNetbankingPaymentBtn.addEventListener('click', confirmPayment);
+            confirmUpiPaymentBtn.addEventListener('click', confirmPayment);
+            
+            // Theme toggle
+            themeToggleBtn.addEventListener('click', toggleTheme);
+        }
+
+        // Slider functionality
+        let currentSlide = 0;
+        const slideCount = slides.length;
+        let slideInterval;
+
+        function startSlideInterval() {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function stopSlideInterval() {
+            clearInterval(slideInterval);
+        }
+
+        function updateSlider() {
+            sliderContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update dots
+            sliderDots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slideCount;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+            updateSlider();
+        }
+
+        function handleNextSlide() {
+            nextSlide();
+            stopSlideInterval();
+            startSlideInterval();
+        }
+
+        function handlePrevSlide() {
+            prevSlide();
+            stopSlideInterval();
+            startSlideInterval();
+        }
+
+        function handleDotClick(index) {
+            currentSlide = index;
+            updateSlider();
+            stopSlideInterval();
+            startSlideInterval();
+        }
+
+        // Search functionality
+        function handleSearch() {
+            const searchTerm = this.value.toLowerCase();
+            if (searchTerm.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            const results = movies.filter(movie => 
+                movie.title.toLowerCase().includes(searchTerm) ||
+                movie.genre.toLowerCase().includes(searchTerm)
+            );
+
+            displaySearchResults(results);
+        }
+
+        function displaySearchResults(results) {
+            searchResults.innerHTML = '';
+            
+            if (results.length > 0) {
+                results.forEach(movie => {
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item';
+                    item.textContent = movie.title;
+                    item.addEventListener('click', () => {
+                        showMovieDetails(movie);
+                        searchResults.style.display = 'none';
+                        searchBar.value = '';
+                    });
+                    searchResults.appendChild(item);
+                });
+                searchResults.style.display = 'block';
+            } else {
+                searchResults.style.display = 'none';
+            }
+        }
+
+        function handleSearchOutsideClick(e) {
+            if (e.target !== searchBar) {
+                searchResults.style.display = 'none';
+            }
+        }
+
+        // Movie details and booking
+        function showMovieDetails(movie) {
+            // Update movie details
+            detailTitle.textContent = movie.title;
+            detailYear.textContent = movie.year;
+            detailRuntime.textContent = movie.runtime;
+            detailGenre.textContent = movie.genre;
+            detailRating.textContent = `${movie.rating}/10`;
+            detailSynopsis.textContent = movie.synopsis;
+            detailPoster.src = movie.image;
+            detailPoster.alt = movie.title;
+
+            // Set current booking movie
+            currentBooking.movie = movie.title;
+
+            // Hide other sections and show details
+            document.querySelector('.hero-slider').style.display = 'none';
+            document.querySelector('.movies-container').style.display = 'none';
+            document.querySelector('.coming-soon').style.display = 'none';
+            movieDetails.style.display = 'block';
+            bookingContainer.style.display = 'none';
+            paymentContainer.style.display = 'none';
+
+            // Scroll to details
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function handleBookBtnClick(e) {
+            e.preventDefault();
+            const movieTitle = this.getAttribute('data-movie');
+            const movie = movies.find(m => m.title === movieTitle);
+            if (movie) {
+                showMovieDetails(movie);
+            }
+        }
+
+        function handleBookNowClick(e) {
+            e.preventDefault();
+            showMovieDetails(movies.find(m => m.title === currentBooking.movie));
+        }
+
+        function handleBackBtnClick(e) {
+            e.preventDefault();
+            showAllMovies();
+        }
+
+        function handleHomeLinkClick(e) {
+            e.preventDefault();
+            showAllMovies();
+        }
+
+        function handleMoviesLinkClick(e) {
+            e.preventDefault();
+            showAllMovies();
+        }
+
+        // Show all movies (homepage)
+        function showAllMovies() {
+            document.querySelector('.hero-slider').style.display = 'block';
+            document.querySelector('.movies-container').style.display = 'block';
+            document.querySelector('.coming-soon').style.display = 'block';
+            movieDetails.style.display = 'none';
+            bookingContainer.style.display = 'none';
+            paymentContainer.style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Restart slider interval when returning to home
+            stopSlideInterval();
+            startSlideInterval();
+        }
+
+        // Time slot selection
+        function handleTimeSlotClick() {
+            // Set current booking time and theater
+            currentBooking.time = this.getAttribute('data-time');
+            currentBooking.theater = this.closest('.theater').querySelector('h3').textContent;
+            
+            // Show booking container
+            movieDetails.style.display = 'none';
+            bookingContainer.style.display = 'block';
+            paymentContainer.style.display = 'none';
+            
+            // Update summary
+            updateBookingSummary();
+            
+            // Mark booked seats
+            markBookedSeats();
+            
+            // Scroll to booking
+            window.scrollTo({ top: bookingContainer.offsetTop, behavior: 'smooth' });
+        }
+
+        // Seat selection
+        function handleSeatClick() {
+            if (this.classList.contains('booked')) return;
+            
+            this.classList.toggle('selected');
+            
+            // Update selected seats
+            updateSelectedSeats();
+            
+            updateBookingSummary();
+        }
+
+        function updateSelectedSeats() {
+            currentBooking.seats = [];
+            document.querySelectorAll('.seat.selected').forEach(selectedSeat => {
+                currentBooking.seats.push(selectedSeat.getAttribute('data-seat'));
+            });
+        }
+
+        // Mark booked seats
+        function markBookedSeats() {
+            // Reset all seats to available (except VIP)
+            seats.forEach(seat => {
+                if (!seat.classList.contains('vip')) {
+                    seat.className = 'seat available';
+                    seat.setAttribute('data-seat', seat.textContent);
+                } else {
+                    seat.className = 'seat vip available';
+                }
+            });
+            
+            // Check if there are booked seats for this movie, theater and time
+            if (bookedSeats[currentBooking.movie] && 
+                bookedSeats[currentBooking.movie][currentBooking.theater] && 
+                bookedSeats[currentBooking.movie][currentBooking.theater][currentBooking.time]) {
+                
+                const booked = bookedSeats[currentBooking.movie][currentBooking.theater][currentBooking.time];
+                booked.forEach(seatNumber => {
+                    const seat = document.querySelector(`.seat[data-seat="${seatNumber}"]`);
+                    if (seat) {
+                        seat.classList.remove('available');
+                        seat.classList.remove('selected');
+                        seat.classList.add('booked');
+                    }
+                });
+            }
+        }
+
+        // Update booking summary
+        function updateBookingSummary() {
+            summaryMovie.textContent = currentBooking.movie;
+            summaryTheater.textContent = currentBooking.theater;
+            summaryTime.textContent = currentBooking.time;
+            summarySeats.textContent = currentBooking.seats.join(', ') || '-';
+            
+            // Calculate prices
+            const vipSeats = currentBooking.seats.filter(seat => seat.startsWith('F')).length;
+            const premiumSeats = currentBooking.seats.filter(seat => 
+                seat.startsWith('A') || seat.startsWith('B') || seat.startsWith('C') ||
+                seat.startsWith('D') || seat.startsWith('E')).length;
+            const standardSeats = currentBooking.seats.length - vipSeats - premiumSeats;
+            
+            const vipPrice = 300;
+            const premiumPrice = 200;
+            const standardPrice = 150;
+            
+            const subtotal = (vipSeats * vipPrice) + (premiumSeats * premiumPrice) + (standardSeats * standardPrice);
+            const tax = subtotal * 0.18;
+            const total = subtotal + tax;
+            
+            summarySubtotal.textContent = `₹${subtotal}`;
+            summaryTax.textContent = `₹${tax.toFixed(2)}`;
+            summaryTotal.textContent = `₹${total.toFixed(2)}`;
+        }
+
+        // Payment process
+        function handleProceedToPayment() {
+            if (currentBooking.seats.length === 0) {
+                alert('Please select at least one seat');
+                return;
+            }
+            
+            bookingContainer.style.display = 'none';
+            paymentContainer.style.display = 'block';
+            window.scrollTo({ top: paymentContainer.offsetTop, behavior: 'smooth' });
+        }
+
+        function handlePaymentMethodClick() {
+            // Remove selected class from all methods
+            paymentMethods.forEach(m => m.classList.remove('selected'));
+            
+            // Add selected class to clicked method
+            this.classList.add('selected');
+            
+            // Hide all forms
+            document.querySelectorAll('.payment-form').forEach(form => {
+                form.style.display = 'none';
+            });
+            
+            // Show selected form
+            const methodType = this.getAttribute('data-method');
+            document.getElementById(`${methodType}-form`).style.display = 'block';
+            
+            currentBooking.paymentMethod = methodType;
+        }
+
+        function confirmPayment() {
+    // Generate booking details
+    const bookingId = 'BK-' + Date.now().toString().slice(-6);
+    const bookingDate = new Date().toLocaleString();
+    
+    const bookingDetails = {
+        id: bookingId,
+        movie: currentBooking.movie,
+        theater: currentBooking.theater,
+        time: currentBooking.time,
+        seats: currentBooking.seats,
+        bookingDate: bookingDate,
+        paymentMethod: currentBooking.paymentMethod,
+        total: document.getElementById('summary-total').textContent
+    };
+    
+    // Save to localStorage
+    saveBooking(bookingDetails);
+    
+    // Show confirmation
+    alert(`Booking confirmed!\n\nBooking ID: ${bookingId}\nMovie: ${currentBooking.movie}\nTheater: ${currentBooking.theater}\nTime: ${currentBooking.time}\nSeats: ${currentBooking.seats.join(', ')}`);
+    
+    // Add to booked seats
+    if (!bookedSeats[currentBooking.movie]) {
+        bookedSeats[currentBooking.movie] = {};
+    }
+    if (!bookedSeats[currentBooking.movie][currentBooking.theater]) {
+        bookedSeats[currentBooking.movie][currentBooking.theater] = {};
+    }
+    if (!bookedSeats[currentBooking.movie][currentBooking.theater][currentBooking.time]) {
+        bookedSeats[currentBooking.movie][currentBooking.theater][currentBooking.time] = [];
+    }
+    
+    bookedSeats[currentBooking.movie][currentBooking.theater][currentBooking.time] = 
+        bookedSeats[currentBooking.movie][currentBooking.theater][currentBooking.time].concat(currentBooking.seats);
+    
+    // Reset and go home
+    resetCurrentBooking();
+    showAllMovies();
+}
+
+// Function to save booking to localStorage
+function saveBooking(booking) {
+    let bookings = JSON.parse(localStorage.getItem('cineMaxBookings')) || [];
+    bookings.push(booking);
+    localStorage.setItem('cineMaxBookings', JSON.stringify(bookings));
+}
+
+// Function to view bookings
+function viewBookings() {
+    window.open('boookings.html', '_blank');
+}
+
+        function resetCurrentBooking() {
+            currentBooking = {
+                movie: "",
+                theater: "",
+                time: "",
+                seats: [],
+                paymentMethod: ""
+            };
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            
+            if (document.body.classList.contains('light-mode')) {
+                this.innerHTML = '<i class="fas fa-sun"></i>';
+                this.setAttribute('aria-label', 'Switch to dark mode');
+            } else {
+                this.innerHTML = '<i class="fas fa-moon"></i>';
+                this.setAttribute('aria-label', 'Switch to light mode');
+            }
+        }
+
+        // Initialize the page
+        initPage();
+    </script>
+</body>
+</html>

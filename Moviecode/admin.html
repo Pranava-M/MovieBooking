@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketSpot - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e74c3c;
+            --primary-light: #ff8a7a;
+            --secondary-color: #2c3e50;
+            --text-color: #333;
+            --bg-color: #f4f4f4;
+            --card-bg: #fff;
+            --header-bg: #e74c3c;
+            --footer-bg: #e74c3c;
+            --hover-color: #c0392b;
+            --transition-speed: 0.3s;
+            --error-color: #e63946;
+            --success-color: #2a9d8f;
+            --link-color: #4a6fa5;
+            --input-border: #ddd;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #ff6b6b;
+            --primary-light: #ff8e8e;
+            --secondary-color: #ecf0f1;
+            --text-color: #ecf0f1;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --header-bg: #1a1a1a;
+            --footer-bg: #1a1a1a;
+            --hover-color: #ff5252;
+            --error-color: #ff6b6b;
+            --success-color: #52b788;
+            --link-color: #6d9eeb;
+            --input-border: #444;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: #fff;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .back-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .admin-content {
+            padding: 40px 0;
+        }
+
+        .data-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .data-section h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .data-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: var(--bg-color);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--hover-color);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--input-border);
+        }
+        
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .json-view {
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-width: 400px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="newsignin.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+            <h1 class="header-title">TicketSpot - Admin Panel</h1>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+    
+    <main class="admin-content">
+        <div class="container">
+            <section class="data-section">
+                <h2>All Form Submissions</h2>
+                <div class="data-container">
+                    <table class="data-table" id="allDataTable">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Timestamp</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allDataBody">
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                    <p id="noDataMessage" style="display: none;">No form submissions yet.</p>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn btn-primary" id="exportAllData">
+                        <i class="fas fa-download"></i> Export All
+                    </button>
+                    <button class="btn btn-secondary" id="clearAllData">
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        if (currentTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            if (document.documentElement.getAttribute('data-theme') === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        });
+        
+        // Load and display all form data
+        document.addEventListener('DOMContentLoaded', () => {
+            const allDataBody = document.getElementById('allDataBody');
+            const noDataMessage = document.getElementById('noDataMessage');
+            const formData = JSON.parse(localStorage.getItem('formData') || '[]');
+            
+            if (formData.length === 0) {
+                document.getElementById('allDataTable').style.display = 'none';
+                noDataMessage.style.display = 'block';
+            } else {
+                allDataBody.innerHTML = '';
+                formData.forEach((entry, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // Type cell
+                    const typeCell = document.createElement('td');
+                    typeCell.textContent = entry.type.replace('_', ' ').toUpperCase();
+                    
+                    // Timestamp cell
+                    const timeCell = document.createElement('td');
+                    const date = new Date(entry.timestamp);
+                    timeCell.textContent = date.toLocaleString();
+                    
+                    // Data cell (formatted JSON)
+                    const dataCell = document.createElement('td');
+                    const pre = document.createElement('pre');
+                    pre.className = 'json-view';
+                    pre.textContent = JSON.stringify(entry.data, null, 2);
+                    dataCell.appendChild(pre);
+                    
+                    row.appendChild(typeCell);
+                    row.appendChild(timeCell);
+                    row.appendChild(dataCell);
+                    allDataBody.appendChild(row);
+                });
+            }
+            
+            // Export all data
+            document.getElementById('exportAllData').addEventListener('click', () => {
+                const dataStr = JSON.stringify(formData, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ticketspot-data-${new Date().toISOString()}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+            
+            // Clear all data
+            document.getElementById('clearAllData').addEventListener('click', () => {
+                if (confirm('Are you sure you want to delete ALL form data? This cannot be undone.')) {
+                    localStorage.removeItem('formData');
+                    allDataBody.innerHTML = '';
+                    document.getElementById('allDataTable').style.display = 'none';
+                    noDataMessage.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

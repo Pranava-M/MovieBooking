@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketSpot - Experience Showcase</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e74c3c;
+            --primary-light: #ff8a7a;
+            --secondary-color: #2c3e50;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --card-bg: #fff;
+            --header-bg: #e74c3c;
+            --footer-bg: #e74c3c;
+            --hover-color: #c0392b;
+            --transition-speed: 0.4s;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #ff6b6b;
+            --primary-light: #ff8e8e;
+            --secondary-color: #ecf0f1;
+            --text-color: #f5f5f5;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --header-bg: #1a1a1a;
+            --footer-bg: #1a1a1a;
+            --hover-color: #ff5252;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all var(--transition-speed) ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--header-bg);
+            color: white;
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            height: 50px;
+            transition: transform 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            background-color: rgba(255,255,255,0.15);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width var(--transition-speed) ease;
+        }
+
+        nav a:hover::after {
+            width: 70%;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255,255,255,0.1);
+            transform: rotate(30deg) scale(1.1);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 2rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(231,76,60,0.1) 0%, transparent 100%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        /* Featured Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            display: inline-block;
+            color: var(--primary-color);
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .section-title h2:hover::after {
+            width: 120px;
+        }
+
+        .experience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .experience-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .experience-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .experience-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .experience-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .experience-card:hover .experience-image img {
+            transform: scale(1.1);
+        }
+
+        .experience-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .experience-content {
+            padding: 1.5rem;
+        }
+
+        .experience-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .experience-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        .experience-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .experience-description {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .experience-highlights {
+            margin-top: 1rem;
+        }
+
+        .experience-highlights h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .highlight-list {
+            list-style-type: none;
+        }
+
+        .highlight-list li {
+            padding: 0.3rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .highlight-list li::before {
+            content: '•';
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 4rem 0;
+            background-color: var(--card-bg);
+            margin: 3rem 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            padding: 4rem 0;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .testimonial-quote {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .testimonial-quote::before,
+        .testimonial-quote::after {
+            color: var(--primary-color);
+            font-size: 2rem;
+            line-height: 1;
+            position: absolute;
+        }
+
+        .testimonial-quote::before {
+            content: '"';
+            top: -0.5rem;
+            left: -1rem;
+        }
+
+        .testimonial-quote::after {
+            content: '"';
+            bottom: -1.5rem;
+            right: -1rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-info h5 {
+            margin-bottom: 0.2rem;
+            color: var(--primary-color);
+        }
+
+        .author-info p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--footer-bg);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255,255,255,0.1);
+            transition: all 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        .social-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .copyright {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease both;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .hero {
+                padding: 3rem 0;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .experience-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="P:\PRANAV\logo_2.jpg" alt="TicketSpot Logo" class="logo">
+            <nav>
+                <ul>
+                    <li><a href="TS Home.html">Home</a></li>
+                    <li><a href="TS About.html">About</a></li>
+                    <li><a href="TS Contact.html">Contact</a></li>
+                    <li>
+                        <button class="theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero fade-in">
+            <div class="container">
+                <h1>Discover Unforgettable Experiences</h1>
+                <p>Explore our curated selection of movies, dining, and events that will create lasting memories.</p>
+            </div>
+        </section>
+
+        <!-- Featured Movies -->
+        <section id="featured-movies" class="section">
+            <div class="container">
+                <div class="section-title fade-in">
+                    <h2>Featured Movies</h2>
+                </div>
+                <div class="experience-grid">
+                    <div class="experience-card fade-in delay-1">
+                        <div class="experience-image">
+                            <img src="P:\HTML\meditation website\html project\Pictures\adventure film.jpg" alt="Featured Movie">
+                            <span class="experience-badge">Now Showing</span>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Blockbuster Adventure</h3>
+                            <div class="experience-meta">
+                                <span><i class="fas fa-clock"></i> 2h 15m</span>
+                                <span><i class="fas fa-star"></i> 4.8/5</span>
+                                <span><i class="fas fa-theater-masks"></i> Action</span>
+                            </div>
+                            <p class="experience-description">
+                                An epic journey through uncharted territories with stunning visuals and heart-pounding action sequences.
+                            </p>
+                            <div class="experience-highlights">
+                                <h4>Why You'll Love It:</h4>
+                                <ul class="highlight-list">
+                                    <li>Academy Award-winning cinematography</li>
+                                    <li>Star-studded cast with incredible performances</li>
+                                    <li>Mind-blowing special effects</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="experience-card fade-in delay-2">
+                        <div class="experience-image">
+                            <img src="P:\HTML\meditation website\html project\Pictures\emotional imag.jpg" alt="Featured Movie">
+                            <span class="experience-badge">Coming Soon</span>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Heartfelt Drama</h3>
+                            <div class="experience-meta">
+                                <span><i class="fas fa-clock"></i> 1h 52m</span>
+                                <span><i class="fas fa-star"></i> 4.9/5</span>
+                                <span><i class="fas fa-theater-masks"></i> Drama</span>
+                            </div>
+                            <p class="experience-description">
+                                A touching story about human connection that will stay with you long after the credits roll.
+                            </p>
+                            <div class="experience-highlights">
+                                <h4>Special Features:</h4>
+                                <ul class="highlight-list">
+                                    <li>Original score by renowned composer</li>
+                                    <li>Based on a true story</li>
+                                    <li>Director's commentary available</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="experience-card fade-in delay-3">
+                        <div class="experience-image">
+                            <img src="P:\HTML\meditation website\html project\Pictures\sifc img.jpg" alt="Featured Movie">
+                            <span class="experience-badge">Critics' Choice</span>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Sci-Fi Masterpiece</h3>
+                            <div class="experience-meta">
+                                <span><i class="fas fa-clock"></i> 2h 48m</span>
+                                <span><i class="fas fa-star"></i> 5/5</span>
+                                <span><i class="fas fa-theater-masks"></i> Sci-Fi</span>
+                            </div>
+                            <p class="experience-description">
+                                A visionary exploration of humanity's future that challenges perceptions and sparks imagination.
+                            </p>
+                            <div class="experience-highlights">
+                                <h4>Notable Aspects:</h4>
+                                <ul class="highlight-list">
+                                    <li>Groundbreaking visual effects</li>
+                                    <li>Thought-provoking storyline</li>
+                                    <li>Immersive sound design</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Dining -->
+        <section id="featured-dining" class="section">
+            <div class="container">
+                <div class="section-title fade-in">
+                    <h2>Featured Dining Experiences</h2>
+                </div>
+                <div class="experience-grid">
+                    <div class="experience-card fade-in delay-1">
+                        <div class="experience-image">
+                            <img src="P:\HTML\meditation website\html project\Pictures\din.jpeg" alt="Fine Dining">
+                            <span class="experience-badge">Gourmet</span>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Gourmet Paradise</h3>
+                            <div class="experience-meta">
+                                <span><i class="fas fa-utensils"></i> Fine Dining</span>
+                                <span><i class="fas fa-star"></i> 4.7/5</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Downtown</span>
+                            </div>
+                            <p class="experience-description">
+                                An exquisite culinary journey featuring seasonal ingredients and innovative techniques by our award-winning chef.
+                            </p>
+                            <div class="experience-highlights">
+                                <h4>Signature Dishes:</h4>
+                                <ul class="highlight-list">
+                                    <li>Truffle-infused filet mignon</li>
+                                    <li>Deconstructed lemon meringue pie</li>
+                                    <li>Sommelier-selected wine pairings</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="experience-card fade-in delay-2">
+                        <div class="experience-image">
+                            <img src="P:\HTML\meditation website\html project\Pictures\bakery.jpg" alt="Casual Dining">
+                            <span class="experience-badge">Family-Friendly</span>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Cozy Bistro</h3>
+                            <div class="experience-meta">
+                                <span><i class="fas fa-utensils"></i> Casual</span>
+                                <span><i class="fas fa-star"></i> 4.5/5</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Riverside</span>
+                            </div>
+                            <p class="experience-description">
+                                Comfort food with a gourmet twist in a warm, inviting atmosphere perfect for family gatherings.
+                            </p>
+                            <div class="experience-highlights">
+                                <h4>Customer Favorites:</h4>
+                                <ul class="highlight-list">
+                                    <li>Artisan wood-fired pizzas</li>
+                                    <li>Handcrafted cocktails</li>
+                                    <li>Seasonal dessert specials</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="experience-card fade-in delay-3">
+                        <div class="experience-image">
+                            <img src="P:\HTML\meditation website\html project\Pictures\cafe.jpg" alt="Cafe">
+                            <span class="experience-badge">Trending</span>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Urban Café</h3>
+                            <div class="experience-meta">
+                                <span><i class="fas fa-coffee"></i> Café</span>
+                                <span><i class="fas fa-star"></i> 4.8/5</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Arts District</span>
+                            </div>
+                            <p class="experience-description">
+                                A vibrant spot where specialty coffee meets artisanal pastries in a creative, artistic setting.
+                            </p>
+                            <div class="experience-highlights">
+                                <h4>Must-Try Items:</h4>
+                                <ul class="highlight-list">
+                                    <li>Single-origin pour-over coffee</li>
+                                    <li>House-made croissants</li>
+                                    <li>Avocado toast with unique toppings</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Events -->
+        <section id="featured-events" class="section">
+            <div class="container">
+                <div class="section-title fade-in">
+                    <h2>Upcoming Events</h2>
+                </div>
+                <div class="experience-grid">
+                    <div class="experience-card fade-in delay-1">
+                        <div class="experience-image">
+                            <img src="P:\HTML\meditation website\html project\Pictures\event1.jpg" alt="Concert">
+                            <span class="experience-badge">Sold Out</span>
+                        </div>
+                        <div class="experience-content">
+                            <h3>International Music Festival</h3>
+                            <div class="experience-meta">
+                                <span><i class="fas fa-calendar-alt"></i> June 15-17</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Central Park</span>
+                                <span><i class="fas fa-music"></i> Multiple Stages</span>
+                            </div>
+                            <p class="experience-description">
+                                Three days of non-stop music featuring international headliners and emerging artists across all genres.
+                            </p>
+                            <div class="experience-highlights">
+                                <h4>Featured Performers:</h4>
+                                <ul class="highlight-list">
+                                    <li>Grammy-winning pop sensation</li>
+                                    <li>Legendary rock band reunion</li>
+                                    <li>Groundbreaking electronic producer</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="experience-card fade-in delay-2">
+                        <div class="experience-image">
+                            <img src="P:\HTML\meditation website\html project\Pictures\award.jpg" alt="Theater">
+                            <span class="experience-badge">Limited Seats</span>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Broadway Sensation</h3>
+                            <div class="experience-meta">
+                                <span><i class="fas fa-calendar-alt"></i> Through August</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Majestic Theater</span>
+                                <span><i class="fas fa-star"></i> 5/5 Critics</span>
+                            </div>
+                            <p class="experience-description">
+                                The Tony Award-winning musical that's taking the world by storm with its breathtaking performances.
+                            </p>
+                            <div class="experience-highlights">
+                                <h4>Why It's Special:</h4>
+                                <ul class="highlight-list">
+                                    <li>Original cast from London's West End</li>
+                                    <li>Stunning set design and costumes</li>
+                                    <li>Memorable musical numbers</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="experience-card fade-in delay-3">
+                        <div class="experience-image">
+                            <img src="P:\HTML\meditation website\html project\Pictures\art.jpg" alt="Exhibition">
+                            <span class="experience-badge">New Exhibition</span>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Immersive Art Experience</h3>
+                            <div class="experience-meta">
+                                <span><i class="fas fa-calendar-alt"></i> May 1 - July 30</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Modern Art Museum</span>
+                                <span><i class="fas fa-palette"></i> Interactive</span>
+                            </div>
+                            <p class="experience-description">
+                                A groundbreaking exhibition that blends technology and art to create fully immersive environments.
+                            </p>
+                            <div class="experience-highlights">
+                                <h4>Exhibition Features:</h4>
+                                <ul class="highlight-list">
+                                    <li>VR-enhanced installations</li>
+                                    <li>AI-generated art collaborations</li>
+                                    <li>Multi-sensory experiences</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="testimonials-section fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>What People Are Saying</h2>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">
+                            The movie selection is always top-notch. I've discovered so many incredible films I wouldn't have seen otherwise.
+                        </p>
+                        <div class="testimonial-author">
+                            <img src="P:\HTML\meditation website\html project\Pictures\harsha.jpg" alt="Harsha Vardhan." class="author-avatar">
+                            <div class="author-info">
+                                <h5>Harsha Vardhan.</h5>
+                                <p>Movie Enthusiast</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">
+                            Their restaurant recommendations have never disappointed. Every dining experience has been memorable.
+                        </p>
+                        <div class="testimonial-author">
+                            <img src="P:\HTML\meditation website\html project\Pictures\pranav.jpg" alt="Pranav." class="author-avatar">
+                            <div class="author-info">
+                                <h5>Pranav.</h5>
+                                <p>Food Blogger</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">
+                            The event curation is exceptional. I always know I'm getting quality when I attend their featured events.
+                        </p>
+                        <div class="testimonial-author">
+                            <img src="P:\HTML\meditation website\html project\Pictures\krishna.jpg" alt="Krishna Teja." class="author-avatar">
+                            <div class="author-info">
+                                <h5>Krishna Teja.</h5>
+                                <p>Event Planner</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>About TicketSpot</h2>
+                </div>
+                <div class="about-content">
+                    <p>TicketSpot is your premier guide to exceptional entertainment experiences. We don't just list events - we curate unforgettable moments that create lasting memories.</p>
+                    <p>Our team of experts carefully selects each featured experience based on quality, uniqueness, and customer satisfaction. We're passionate about connecting people with extraordinary entertainment options that go beyond the ordinary.</p>
+                    <p>From blockbuster movies to hidden gem restaurants and must-see events, we're dedicated to helping you discover the best your city has to offer.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="fade-in">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="test_1_login.html">Login</a>
+                <a href="test_2_about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p class="copyright">© 2025 TicketSpot. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+        // Check for saved theme preference or use system preference
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+            document.body.setAttribute('data-theme', 'dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (document.body.getAttribute('data-theme') === 'dark') {
+                document.body.removeAttribute('data-theme');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Scroll Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

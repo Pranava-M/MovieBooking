@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - CineMax</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e50914;
+            --secondary-color: #b81d24;
+            --dark-bg: #141414;
+            --light-bg: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #fff;
+            --card-bg: #222;
+            --border-color: #444;
+        }
+
+        .light-mode {
+            --dark-bg: #f8f9fa;
+            --light-bg: #141414;
+            --text-dark: #fff;
+            --text-light: #333;
+            --card-bg: #fff;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 0;
+            background-color: rgba(229, 9, 20, 0.1);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .header p {
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+
+        .bookings-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .booking-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .booking-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .booking-id {
+            background-color: rgba(229, 9, 20, 0.2);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 0.3rem;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 1rem;
+            color: var(--primary-color);
+        }
+
+        .no-bookings {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+        }
+
+        .no-bookings i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .delete-btn {
+            background-color: rgba(229, 9, 20, 0.1);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .delete-btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        #theme-toggle-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .back-btn {
+                position: relative;
+                left: auto;
+                margin-bottom: 1rem;
+            }
+            
+            .booking-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .booking-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="TS Moviepage.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Back
+        </a>
+        <div class="header-content">
+            <h1>My Movie Bookings</h1>
+            <p>All your upcoming and past reservations</p>
+        </div>
+    </div>
+
+    <div class="bookings-container" id="bookingsContainer">
+        <!-- Bookings will be loaded here -->
+    </div>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <button id="theme-toggle-btn" title="Toggle theme"><i class="fas fa-moon"></i></button>
+    </div>
+
+    <script>
+        // Load bookings from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookings = JSON.parse(localStorage.getItem('cineMaxBookings')) || [];
+            const container = document.getElementById('bookingsContainer');
+            
+            if (bookings.length === 0) {
+                container.innerHTML = `
+                    <div class="no-bookings">
+                        <i class="fas fa-ticket-alt"></i>
+                        <p>You don't have any bookings yet.</p>
+                        <p>Book your next movie experience at CineMax!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort bookings by date (newest first)
+            bookings.sort((a, b) => new Date(b.bookingDate) - new Date(a.bookingDate));
+            
+            // Display bookings
+            container.innerHTML = bookings.map(booking => `
+                <div class="booking-card" data-id="${booking.id}">
+                    <div class="booking-header">
+                        <h2 class="booking-title">${booking.movie}</h2>
+                        <span class="booking-id">${booking.id}</span>
+                    </div>
+                    <div class="booking-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Theater</span>
+                            <span class="detail-value">${booking.theater}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Showtime</span>
+                            <span class="detail-value">${booking.time}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Seats</span>
+                            <span class="detail-value">${booking.seats.join(', ')}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Booking Date</span>
+                            <span class="detail-value">${booking.bookingDate}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Payment Method</span>
+                            <span class="detail-value">${booking.paymentMethod.charAt(0).toUpperCase() + booking.paymentMethod.slice(1)}</span>
+                        </div>
+                    </div>
+                    <div class="total">${booking.total}</div>
+                    <button class="delete-btn" onclick="cancelBooking('${booking.id}')">
+                        <i class="fas fa-trash-alt"></i> Cancel Booking
+                    </button>
+                </div>
+            `).join('');
+        });
+        
+        // Cancel booking function
+        function cancelBooking(id) {
+            if (confirm('Are you sure you want to cancel this booking?')) {
+                let bookings = JSON.parse(localStorage.getItem('cineMaxBookings')) || [];
+                bookings = bookings.filter(booking => booking.id !== id);
+                localStorage.setItem('cineMaxBookings', JSON.stringify(bookings));
+                
+                // Refresh the page
+                location.reload();
+            }
+        }
+        
+        // Theme toggle
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        
+        if (savedTheme === 'dark') {
+            document.body.classList.add('light-mode');
+            themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        themeToggleBtn.addEventListener('click', function() {
+            document.body.classList.toggle('light-mode');
+            
+            if (document.body.classList.contains('light-mode')) {
+                this.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                this.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // Make cancelBooking available globally
+        window.cancelBooking = cancelBooking;
+    </script>
+</body>
+</html>
