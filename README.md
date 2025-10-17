@@ -1,4 +1,4 @@
-# CineDine Experience Suite 🎬🍽️
+# CineDine Experience Suite 
 
 A desktop application for combined movie ticket booking and restaurant reservations, built with Electron.js and Node.js.
 
