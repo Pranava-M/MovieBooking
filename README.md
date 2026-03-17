@@ -28,6 +28,7 @@ This application provides a unified platform for:
 - Encrypted user data storage
 - Real-time notifications
 
+  
 ## 🛠️ Tech Stack
 **Frontend**  
 - Electron.js (Chromium + Node.js integration)
