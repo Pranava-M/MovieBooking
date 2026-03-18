@@ -8,7 +8,6 @@ This application provides a unified platform for:
 - **Movie Bookings**: Browse films, select seats, and book cinema tickets
 - **Dining Reservations**: Reserve tables, view menus, and schedule restaurant visits
 - Integrated user accounts and transaction history
-
 ## ✨ Key Features
 ### Movie Module
 - Browse current movies & showtimes
