@@ -31,7 +31,6 @@ This application provides a unified platform for:
 - Electron.js (Chromium + Node.js integration)
 - React.js + Redux Toolkit
 - Tailwind CSS + Headless UI
-
 **Backend**  
 - Node.js + Express.js
 - JWT Authentication
