@@ -34,7 +34,6 @@ This application provides a unified platform for:
 **Backend**  
 - Node.js + Express.js
 - JWT Authentication
-
 **Tools**  
 - Electron Builder (packaging)
 - Electron Forge (development)
