@@ -38,7 +38,6 @@ This application provides a unified platform for:
 - Electron Builder (packaging)
 - Electron Forge (development)
 
-
 ## 🚀 Installation
 1. **Prerequisites**  
    - Node.js v18+
