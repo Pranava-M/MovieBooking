@@ -14,7 +14,6 @@ This application provides a unified platform for:
 - Interactive seat selection map
 - Multiple payment gateway integration
 - SMS ticket delivery
-
 ### Dining Module
 - Restaurant table availability checker
 - Menu preview with dietary filters
