@@ -19,7 +19,6 @@ This application provides a unified platform for:
 - Menu preview with dietary filters
 - Special request submissions
 - Reservation modification/cancellation
-
 ### Core Features
 - Cross-platform desktop app (Windows/macOS/Linux)
 - Offline-first capabilities
