@@ -4,7 +4,6 @@ A desktop application for combined movie ticket booking and restaurant reservati
 
 
 
-
 ## 📖 Overview
 This application provides a unified platform for:
 - **Movie Bookings**: Browse films, select seats, and book cinema tickets
